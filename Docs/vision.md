@@ -1,5 +1,13 @@
 # Tough C — Vision
 
+> This is a philosophy document.
+> 这是理念文档。
+>
+> For implementation status and build readiness, see:
+> 实现进度和构建可用性请查看：
+> - `Working Track .md`
+> - `BUILDING_ON_LINUX.md`
+
 ## The C++ Federation Promise
 
 C++ is not a single language. It is a **federation of capabilities**:

@@ -3,6 +3,9 @@
 
 ## Quick Start / 快速开始
 
+Recommended for clean verification: Linux first.
+推荐用于干净验证：优先在 Linux 上构建。
+
 ### Prerequisites / 前置要求
 
 - **CMake** 3.20 or higher / 3.20 或更高版本
@@ -12,8 +15,8 @@
 ### Building / 构建
 
 ```bash
-# Create build directory / 创建构建目录
-mkdir build && cd build
+# Create clean Linux build directory / 创建干净的 Linux 构建目录
+mkdir -p build-linux && cd build-linux
 
 # Configure / 配置
 cmake .. -DCMAKE_BUILD_TYPE=Release
@@ -22,8 +25,18 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release
 
 # Run tests (optional) / 运行测试（可选）
-ctest -C Release
+ctest --output-on-failure
 ```
+
+For Linux-specific package setup and troubleshooting, see:
+Linux 依赖安装和故障排查见：
+
+- [BUILDING_ON_LINUX.md](BUILDING_ON_LINUX.md)
+
+For Windows-specific setup, see:
+Windows 专用配置见：
+
+- [BUILDING_ON_WINDOWS.md](BUILDING_ON_WINDOWS.md)
 
 ### Installation / 安装
 
@@ -85,6 +98,7 @@ tcc-check --verbose myfile.tcc
 tcc-check --no-ownership myfile.tcc   # Disable ownership / 禁用所有权
 tcc-check --no-lifetime myfile.tcc    # Disable lifetime / 禁用生命周期
 tcc-check --no-concurrency myfile.tcc # Disable concurrency / 禁用并发
+tcc-check --no-safety myfile.tcc      # Disable safety patterns / 禁用安全模式
 
 # Combine options / 组合选项
 tcc-check --verbose --no-concurrency myfile.tcc
@@ -110,6 +124,11 @@ filename.tcc:10:5: error / 错误: Use of 'new' operator forbidden [TCC-OWN-001]
 - **`TCC-OWN-xxx`**: Ownership violations / 所有权违规
 - **`TCC-LIFE-xxx`**: Lifetime violations / 生命周期违规
 - **`TCC-CONC-xxx`**: Concurrency violations / 并发违规
+- **`TCC-BORROW-xxx`**: Borrow checker violations / 借用检查违规
+- **`TCC-OPTION-xxx`**: Option safety violations / Option 安全违规
+- **`TCC-RESULT-xxx`**: Result handling violations / Result 处理违规
+- **`TCC-PANIC-xxx`**: Panic/unwrap violations / panic/unwrap 违规
+- **`TCC-SAFE-xxx`**: Bounds and general safety violations / 边界和通用安全违规
 
 ---
 
@@ -154,6 +173,12 @@ See the `examples/` directory for:
 - ✗ `04_lifetime_violations.tcc` - Lifetime errors / 生命周期错误
 - ✓ `05_thread_safety.tcc` - Thread-safe patterns / 线程安全模式
 - ✗ `06_thread_violations.tcc` - Concurrency errors / 并发错误
+- ✓ `07_move_semantics.tcc` - Move-safe patterns / 移动安全模式
+- ✗ `08_move_violations.tcc` - Use-after-move and double-move / 移动后使用与双重移动
+- ✓ `09_borrow_checker.tcc` - Borrow-safe patterns / 借用安全模式
+- ✗ `10_borrow_violations.tcc` - Borrow conflicts / 借用冲突
+- ✓ `11_option_result_patterns.tcc` - Option/Result best practices / Option/Result 最佳实践
+- ✗ `12_safety_violations.tcc` - Safety violations / 安全违规
 
 ---
 
@@ -209,11 +234,11 @@ A: 从该特定文件移除 TCC 标记。TCC 是按文件选择加入的。
 
 ## Next Steps / 后续步骤
 
-- Read [Core Rule Sets.md](../Core%20Rule%20Sets.md) for rule details
-  阅读 [Core Rule Sets.md](../Core%20Rule%20Sets.md) 了解规则详情
-  
-- Check [vision.md](../Docs/vision.md) for philosophy
-  查看 [vision.md](../Docs/vision.md) 了解理念
-  
-- See [MVP Planning Document.md](../MVP%20Planning%20Document.md) for roadmap
-  参见 [MVP Planning Document.md](../MVP%20Planning%20Document.md) 了解路线图
+- Read [Docs/INDEX.md](Docs/INDEX.md) for the full documentation map
+  阅读 [Docs/INDEX.md](Docs/INDEX.md) 获取完整文档索引
+
+- Check [Docs/vision.md](Docs/vision.md) for philosophy
+  查看 [Docs/vision.md](Docs/vision.md) 了解理念
+
+- Track implementation reality in [Working Track .md](Working%20Track%20.md)
+  在 [Working Track .md](Working%20Track%20.md) 跟踪真实实现进度

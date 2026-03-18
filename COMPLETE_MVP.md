@@ -1,7 +1,17 @@
-﻿# Tough C Profiler - Complete MVP Documentation
-# Tough C 分析器 - 完整 MVP 文档
+﻿# Tough C Profiler - MVP Milestone Record
+# Tough C 分析器 - MVP 里程碑记录
 
-## 🎉 MVP Complete! / MVP 完成！
+> Status note / 状态说明:
+> This file records the historical MVP milestone.
+> 本文件记录历史 MVP 里程碑。
+>
+> For the current implementation reality, see:
+> 当前真实实现状态请查看：
+> - `Working Track .md`
+> - `README.md`
+> - `BUILDING_ON_LINUX.md`
+
+## 🎉 MVP Milestone Complete (Historical) / MVP 里程碑完成（历史）
 
 **Version / 版本**: 0.1.0-MVP  
 **Completion Date / 完成日期**: January 28, 2026 / 2026年1月28日
@@ -295,7 +305,8 @@ Tough C 不是限制 C++，而是**延后你需要其全部能力的时机**。
 ---
 
 **Completion Date / 完成日期**: 2026-01-28  
-**MVP Status / MVP 状态**: ✅ **COMPLETE / 完成**  
-**Progress / 进度**: **100%**
+**MVP Status / MVP 状态**: ✅ Historical milestone complete / 历史里程碑完成
+**Current Project Status / 当前项目状态**: 🚧 Active development, Linux build verification in progress / 正在开发，Linux 构建验证进行中
 
-**🎉 Ready for Production! / 准备投入生产！🎉**
+Production readiness should be decided by fresh build + test evidence.
+是否可投入生产应以最新构建和测试证据为准。

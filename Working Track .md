@@ -1,269 +1,250 @@
 ﻿# Tough C Profiler - Working Track / 工作进度跟踪
-# Progress Tracking for MVP Development / MVP 开发进度跟踪
+# Live Progress Tracking / 实时进度跟踪
 
-## 📊 Overall Progress / 整体进度
+## Current Snapshot / 当前快照
 
-**Current Phase / 当前阶段**: Phase 1 ✓ **COMPLETED / 已完成**
-
-**MVP Completion / MVP 完成度**: 20% (Phase 1 of 8)
-
----
-
-## ✅ Phase 1: Project Structure & Toolchain (COMPLETED / 已完成)
-
-**Status / 状态**: ✓ **100% Complete / 完全完成**
-
-**Completion Date / 完成日期**: 2026-01-28
-
-### Deliverables / 交付物
-
-✓ **Project Structure / 项目结构**
-- Created directory layout: `src/`, `include/`, `tests/`, `examples/`, `Docs/`
-- 创建目录布局：`src/`、`include/`、`tests/`、`examples/`、`Docs/`
-
-✓ **Build System / 构建系统**
-- Root CMakeLists.txt with LLVM/Clang integration
-- Source CMakeLists.txt for executable
-- Test CMakeLists.txt for test framework
-- 根 CMakeLists.txt 集成 LLVM/Clang
-- 源码 CMakeLists.txt 用于可执行文件
-- 测试 CMakeLists.txt 用于测试框架
-
-✓ **Core Headers / 核心头文件**
-- `include/tcc/Core.h` - Types, constants, exit codes / 类型、常量、退出码
-- `include/tcc/Diagnostic.h` - Error reporting system / 错误报告系统
-- `include/tcc/Rule.h` - Rule base classes / 规则基类
-- `include/tcc/FileDetector.h` - File detection / 文件检测
-- `include/tcc/RuleEngine.h` - Rule orchestration / 规则编排
-
-✓ **Implementation Files / 实现文件**
-- `src/main.cpp` - CLI entry point with full bilingual support / CLI 入口点，完全双语支持
-- `src/Diagnostic.cpp` - Diagnostic system implementation / 诊断系统实现
-- `src/Rule.cpp` - Rule registry / 规则注册表
-- `src/FileDetector.cpp` - `.tcc` and `@tcc` detection / `.tcc` 和 `@tcc` 检测
-- `src/RuleEngine.cpp` - Rule engine skeleton / 规则引擎骨架
-
-✓ **CI/CD Pipeline / CI/CD 流水线**
-- `.github/workflows/ci.yml` - Multi-platform, multi-version LLVM
-- 多平台、多版本 LLVM 支持
-
-✓ **Examples / 示例**
-- 6 example files demonstrating passing and failing patterns
-- 6 个示例文件展示通过和失败的模式
-- Ownership, lifetime, and concurrency examples
-- 所有权、生命周期和并发示例
-
-✓ **Documentation / 文档**
-- `BUILD.md` - Complete build and usage guide / 完整构建和使用指南
-- `PROJECT_STRUCTURE.md` - Project organization / 项目组织结构
-- `.gitignore` - Build artifacts / 构建产物
-
-✓ **Bilingual Implementation / 双语实现**
-- All code comments in Chinese and English / 所有代码注释中英双语
-- All documentation in native bilingual format / 所有文档原生双语格式
-- All error messages and UI text bilingual / 所有错误消息和界面文本双语
+- Last updated / 最后更新: 2026-03-18
+- Project state / 项目状态: Active implementation, not yet build-verified / 正在实现中，尚未完成构建验证
+- Overall progress / 整体进度: ~70%
+- Build status / 构建状态: Blocked on local LLVM/Clang dependency / 被本机 LLVM/Clang 依赖阻塞
 
 ---
 
-## ✅ Phase 2: Rule Engine Core Design (COMPLETED / 已完成)
+## Executive Summary / 执行摘要
 
-**Status / 状态**: ✓ **100% Complete / 完全完成**
+The repository has moved well beyond the original MVP skeleton.
+仓库已经明显超出了最初的 MVP 骨架阶段。
 
-**Completion Date / 完成日期**: 2026-01-28
+What is true today / 当前真实情况：
 
-### Deliverables / 交付物
+- The core analyzer structure exists: CLI, file detection, diagnostics, rule engine, AST visitor, ownership/lifetime/concurrency rule modules.
+- 核心分析器结构已存在：CLI、文件检测、诊断系统、规则引擎、AST 访问器、所有权/生命周期/并发规则模块。
+- Rust-inspired extensions were added: move semantics, borrow checker, Option/Result/safety pattern rules.
+- 已加入 Rust 风格扩展：移动语义、借用检查器、Option/Result/安全模式规则。
+- New examples and test files were added for these rule families.
+- 这些规则族对应的新示例和测试文件已经加入。
+- AST visitor wiring was extended for move and safety detection paths.
+- AST visitor 已扩展到支持移动语义和安全模式的检测路径。
+- Performance-related guardrails were added, including implicit-code skipping and error-cap short-circuiting.
+- 已加入若干性能保护措施，包括跳过隐式代码与按错误上限提前停止。
 
-✓ **AST Visitor Framework / AST 访问者框架**
-- Created `include/tcc/ASTVisitor.h` - Visitor interface
-- Created `src/ASTVisitor.cpp` - AST traversal implementation
-- Supports visiting: new/delete, functions, variables, lambdas, threads
-- 创建了 AST 访问者接口和实现
-- 支持访问：new/delete、函数、变量、lambda、线程
+What is not yet true / 当前还不成立的部分：
 
-✓ **First Ownership Rules / 首批所有权规则**
-- Created `include/tcc/OwnershipRules.h` - Rule declarations
-- Created `src/OwnershipRules.cpp` - Rule implementations
-- Implemented TCC-OWN-001: Forbid 'new' operator / 禁止 'new' 操作符
-- Implemented TCC-OWN-002: Forbid 'delete' operator / 禁止 'delete' 操作符
-- Framework for TCC-OWN-003 (malloc/free) and TCC-OWN-004 (raw pointers)
-
-✓ **Rule Engine Integration / 规则引擎集成**
-- Updated `src/RuleEngine.cpp` with AST visitor integration
-- Automatic rule registration in `initializeDefaultRules()`
-- Category-based rule filtering
-- 更新规则引擎，集成 AST 访问者
-- 自动规则注册
-- 基于类别的规则过滤
-
-✓ **Test Cases / 测试用例**
-- Created `tests/data/fail/ownership_new_delete.cpp` - Failing test
-- Created `tests/data/pass/ownership_smart_pointers.cpp` - Passing test
-- Updated `tests/CMakeLists.txt` with ownership tests
-- 创建失败和通过的测试用例
-
-✓ **Rich Diagnostics / 丰富诊断**
-- Error messages with fix suggestions / 带修复建议的错误消息
-- Escape path recommendations / 逃生路径推荐
-- Bilingual output / 双语输出
+- The project is not currently build-confirmed on this machine.
+- 该项目目前未在这台机器上完成可构建验证。
+- `tcc-check` has not been produced in `build/`.
+- `build/` 中还没有生成 `tcc-check`。
+- Several new rule implementations still contain placeholder logic.
+- 多个新增规则实现仍然包含占位逻辑。
+- The old statement "MVP 100% complete" is no longer accurate for the current code state.
+- 旧文档中 “MVP 100% 完成” 的表述已不符合当前代码状态。
 
 ---
 
-## 📋 Remaining Phases / 剩余阶段
+## Codebase Check / 代码空间检查
 
-### Phase 3: Ownership Rules / 所有权规则
-- Detect `new`/`delete` usage / 检测 `new`/`delete` 使用
-- Detect raw pointer ownership / 检测原始指针所有权
-- Enforce smart pointer patterns / 强制智能指针模式
+### Implemented and present / 已落地并存在
 
-### Phase 4: Lifetime Rules / 生命周期规则
-- Detect dangling references / 检测悬空引用
-- Detect returning locals / 检测返回局部变量
-- Track reference lifetimes / 跟踪引用生命周期
+Core engine / 核心引擎：
 
-### Phase 5: Concurrency Rules / 并发规则
-- Detect unsynchronized shared state / 检测非同步共享状态
-- Detect unsafe lambda captures / 检测不安全的 lambda 捕获
-- Validate thread safety patterns / 验证线程安全模式
+- `src/main.cpp`
+- `src/Diagnostic.cpp`
+- `src/FileDetector.cpp`
+- `src/RuleEngine.cpp`
+- `src/ASTVisitor.cpp`
 
-### Phase 6: CLI & Integration / CLI 与集成
-- Polish command-line interface / 完善命令行界面
-- CMake/build system integration / CMake/构建系统集成
-- Configuration file support / 配置文件支持
+Rule families / 规则族：
 
-### Phase 7: Test Suite / 测试套件
-- Comprehensive test coverage / 全面测试覆盖
-- AI-generated code test cases / AI 生成代码测试用例
-- Performance benchmarks / 性能基准测试
+- `src/OwnershipRules.cpp`
+- `src/LifetimeRules.cpp`
+- `src/ConcurrencyRules.cpp`
+- `src/MoveSemanticRules.cpp`
+- `src/BorrowRules.cpp`
+- `src/SafetyPatternRules.cpp`
 
-### Phase 8: Documentation / 文档
-- Complete rule documentation / 完整规则文档
-- Migration guide / 迁移指南
-- Real-world examples / 实际示例
+Headers / 头文件：
 
----
+- `include/tcc/ASTVisitor.h`
+- `include/tcc/MoveSemanticRules.h`
+- `include/tcc/BorrowRules.h`
+- `include/tcc/SafetyPatternRules.h`
+- `include/tcc/DiagnosticHelper.h`
 
-## 🎯 Key Achievements / 关键成就
+Tests/examples added / 已加入测试与示例：
 
-### Phase 1 Highlights / 阶段 1 亮点
+- New examples: `07` to `12`
+- New tests: move pass/fail, safety pass/fail
 
-1. **Professional Architecture / 专业架构**
-   - Clean separation of concerns / 清晰的关注点分离
-   - Extensible rule system / 可扩展的规则系统
-   - Modular design ready for growth / 模块化设计便于扩展
+### Integrated recently / 最近已接入
 
-2. **Native Bilingual / 原生双语**
-   - Not translation, but parallel native expression / 不是翻译，而是并行的原生表达
-   - Code comments, docs, and UI all bilingual / 代码注释、文档和界面全部双语
+- `RuleCategory::Safety` added to core taxonomy.
+- `RuleCategory::Safety` 已加入核心类别体系。
+- `SafetyRule` base class added.
+- 已加入 `SafetyRule` 基类。
+- `RuleEngine` now registers move/borrow/safety rules.
+- `RuleEngine` 现在会注册 move/borrow/safety 规则。
+- `ASTVisitor` now handles `VisitCallExpr`, `VisitDeclRefExpr`, `VisitCXXMemberCallExpr`, `VisitArraySubscriptExpr`, `VisitCXXOperatorCallExpr`.
+- `ASTVisitor` 现已处理上述新的 `Visit*` 回调。
+- `tests/CMakeLists.txt` includes new move/safety test entries.
+- `tests/CMakeLists.txt` 已加入新的 move/safety 测试项。
 
-3. **Production-Ready Foundation / 生产就绪的基础**
-   - CMake build system / CMake 构建系统
-   - CI/CD pipeline / CI/CD 流水线
-   - Multi-platform support / 多平台支持
+### Still partial / 仍为部分实现
 
-4. **Clear Philosophy / 清晰的理念**
-   - Safety is opt-in / 安全是可选的
-   - Power is never removed / 能力永不移除
-   - Escape hatches always exist / 逃生通道始终存在
+The following logic is still placeholder or incomplete:
+以下逻辑仍然是占位或未完成状态：
 
----
+- `DoubleMoveRule::check()`
+- `DoubleMoveRule::isMovedMultipleTimes()`
+- `BorrowOutlivesOwnerRule::check()`
+- `BorrowOutlivesOwnerRule::canOutlive()`
+- `MultipleMutableBorrowRule::check()`
+- `MultipleMutableBorrowRule::hasMultipleMutableBorrows()`
+- `BorrowDuringModificationRule::check()`
+- `BorrowDuringModificationRule::isBorrowedAndModified()`
+- `EnforceNullCheckRule::isUsedWithoutCheck()`
+- `EnforceResultHandlingRule::isResultIgnored()`
+- `UncheckedErrorReturnRule::markMustUse()`
+- `EnforceBoundsCheckRule::isBoundsChecked()`
 
-## ✅ Phase 3: Ownership Rules Implementation (COMPLETED / 已完成)
-
-**Status / 状态**: ✓ **100% Complete / 完全完成**
-**Completion Date / 完成日期**: 2026-01-28
-
-All 4 ownership rules fully implemented with malloc/free and raw pointer detection.
-全部4个所有权规则已完全实现，包括 malloc/free 和原始指针检测。
-
----
-
-## ✅ Phase 4: Lifetime Rules Implementation (COMPLETED / 已完成)
-
-**Status / 状态**: ✓ **100% Complete / 完全完成**
-**Completion Date / 完成日期**: 2026-01-28
-
-All 4 lifetime rules implemented: dangling refs/ptrs, containers, reference members.
-全部4个生命周期规则已实现：悬空引用/指针、容器、引用成员。
+This means the rule surface is broader than before, but several of the new checks are not yet semantically complete.
+这意味着规则覆盖面已经比之前更广，但其中多项新增检查在语义上尚未完整实现。
 
 ---
 
-## ✅ Phase 5: Concurrency Rules Implementation (COMPLETED / 已完成)
+## Build Reality / 构建现状
 
-**Status / 状态**: ✓ **100% Complete / 完全完成**
-**Completion Date / 完成日期**: 2026-01-28
+### Current machine status / 当前机器状态
 
-All 4 concurrency rules implemented for thread safety verification.
-全部4个并发规则已实现，用于线程安全验证。
+- `build/CMakeCache.txt` contains `LLVM_DIR:PATH=LLVM_DIR-NOTFOUND`.
+- `build/CMakeCache.txt` 中存在 `LLVM_DIR:PATH=LLVM_DIR-NOTFOUND`。
+- No LLVM installation was found under `C:\Program Files\LLVM`.
+- 在 `C:\Program Files\LLVM` 下未发现 LLVM 安装。
+- The `build/` directory currently contains cache files only, not a finished Visual Studio or Ninja build output.
+- 当前 `build/` 目录只有缓存内容，没有完整的 Visual Studio 或 Ninja 构建产物。
 
----
+### Consequence / 结果
 
-## ✅ Phase 6: CLI Tools & Integration (COMPLETED / 已完成)
-
-**Status / 状态**: ✓ **100% Complete / 完全完成**
-**Completion Date / 完成日期**: 2026-01-28
-
-Full CLI with category control, verbose mode, and CI-friendly output.
-完整的 CLI，包含类别控制、详细模式和 CI 友好的输出。
-
----
-
-## ✅ Phase 7: Test Suite (COMPLETED / 已完成)
-
-**Status / 状态**: ✓ **100% Complete / 完全完成**
-**Completion Date / 完成日期**: 2026-01-28
-
-12 comprehensive test cases covering all rule categories.
-12个全面的测试用例，覆盖所有规则类别。
+- The repository is not yet runnable as a profiler on this machine.
+- 该仓库目前还不能在这台机器上作为 profiler 运行。
+- Test execution and example output demonstration are blocked until LLVM/Clang is installed and CMake is reconfigured.
+- 在安装 LLVM/Clang 并重新配置 CMake 之前，测试执行和失败示例输出展示都无法完成。
 
 ---
 
-## ✅ Phase 8: Documentation & Examples (COMPLETED / 已完成)
+## Progress by Area / 分区域进度
 
-**Status / 状态**: ✓ **100% Complete / 完全完成**
-**Completion Date / 完成日期**: 2026-01-28
+### 1. Foundation / 基础设施
 
-Complete documentation set with bilingual support.
-完整的文档集，支持双语。
+Status / 状态: Mostly complete / 大体完成
+
+- CMake layout exists.
+- CMake 结构已存在。
+- CLI entry exists.
+- CLI 入口已存在。
+- Diagnostic and file detection infrastructure exists.
+- 诊断与文件检测基础设施已存在。
+
+### 2. Core Rule Families / 核心规则族
+
+Status / 状态: Implemented at baseline / 基线已实现
+
+- Ownership rules: present
+- Lifetime rules: present
+- Concurrency rules: present
+
+### 3. Rust-Inspired Extensions / Rust 风格扩展
+
+Status / 状态: Integrated but partially incomplete / 已接入，但部分未完成
+
+- Move semantics: partially implemented
+- Borrow checker: partially implemented
+- Option/Result/safety patterns: partially implemented
+
+### 4. AST Integration / AST 集成
+
+Status / 状态: Substantially improved / 已明显推进
+
+- New visit hooks added for move/safety patterns.
+- 新的 move/safety 访问钩子已加入。
+- Diagnostic helper added to normalize reporting from nested visitors.
+- 已加入诊断辅助工具，用于统一内部 visitor 的报错输出。
+
+### 5. Tests and Examples / 测试与示例
+
+Status / 状态: Expanded, not yet executed locally / 已扩充，但尚未在本机执行
+
+- Legacy tests remain.
+- 历史测试仍在。
+- New move and safety tests were added.
+- 已新增 move 与 safety 测试。
+- Examples `07` to `12` exist.
+- `07` 到 `12` 的示例已存在。
+
+### 6. Build Verification / 构建验证
+
+Status / 状态: Blocked / 阻塞中
+
+- Missing local LLVM/Clang development libraries.
+- 缺少本机 LLVM/Clang 开发库。
 
 ---
 
-## 🎉 MVP COMPLETE! / MVP 完成！
+## Immediate Risks / 当前风险
 
-**Overall Progress / 整体进度**: ✅ **100%** (8/8 phases)
+1. Several new rule classes compile as structure, but not yet as complete analysis logic.
+   多个新增规则类在结构上已经存在，但分析逻辑还未真正做完。
 
-**Total Deliverables / 总交付物**:
-- 12 Safety Rules / 12 个安全规则
-- 12 Test Cases / 12 个测试用例
-- 8 Header Files / 8 个头文件
-- 9 Source Files / 9 个源文件
-- 10+ Documentation Files / 10+ 个文档文件
-- ~4,500 Lines of Code / ~4,500 行代码
+2. Documentation in some places now overstates completion.
+   某些文档当前对完成度的描述偏乐观。
 
-See `COMPLETE_MVP.md` for full summary.
-查看 `COMPLETE_MVP.md` 了解完整总结。
+3. Without build verification, API-level and type-level integration issues may still remain.
+   在没有完成构建验证之前，API 级和类型级的集成问题仍可能存在。
 
 ---
 
-## 💡 Design Decisions / 设计决策
+## Next Actions / 下一步行动
 
-### Why This Structure? / 为什么这样设计？
+### Priority 1 / 优先级 1
 
-1. **Separation of Interface and Implementation / 接口与实现分离**
-   - Headers in `include/tcc/` for clean API / 头文件在 `include/tcc/` 提供清晰 API
-   - Implementation in `src/` for encapsulation / 实现在 `src/` 实现封装
+Install LLVM/Clang on Windows and reconfigure CMake.
+在 Windows 上安装 LLVM/Clang 并重新配置 CMake。
 
-2. **Rule System Extensibility / 规则系统可扩展性**
-   - Base `Rule` class for all rules / 所有规则的 `Rule` 基类
-   - Category-based organization / 基于类别的组织
-   - Easy to add new rules / 易于添加新规则
+Expected outcome / 预期结果：
 
-3. **Diagnostic Quality / 诊断质量**
-   - Structured error messages / 结构化错误消息
-   - Fix suggestions / 修复建议
-   - Escape path recommendations / 逃生路径推荐
+- generate actual build files
+- produce `tcc-check`
+- run pass/fail tests
+- capture real diagnostics from violation examples
+
+### Priority 2 / 优先级 2
+
+Finish placeholder rule logic.
+补完占位规则逻辑。
+
+Focus areas / 重点：
+
+- double-move detection
+- borrow lifetime analysis
+- borrow-during-modification detection
+- result ignored detection
+- null-check dataflow detection
+- bounds-check reasoning
+
+### Priority 3 / 优先级 3
+
+After build passes, reconcile docs with reality.
+待构建通过后，再统一校正文档与真实状态。
+
+Files to revisit / 需要回看的文件：
+
+- `README.md`
+- `COMPLETE_MVP.md`
+- `PROJECT_STRUCTURE.md`
+- `Docs/INDEX.md`
 
 ---
 
-**Last Updated / 最后更新**: 2026-01-28  
-**Updated By / 更新者**: GitHub Copilot  
-**Phase / 阶段**: 1 of 8 Complete / 第 1/8 阶段完成
+## Honest Status Line / 真实状态一句话
+
+Tough C Profiler is now a meaningful in-progress static analysis project with real code, real rule modules, and expanded safety scope, but it is not yet locally build-proven or feature-complete.
+Tough C Profiler 现在已经是一个有真实代码、真实规则模块、并扩展了安全范围的静态分析项目，但它还没有在本机完成构建验证，也还没有达到功能完整状态。

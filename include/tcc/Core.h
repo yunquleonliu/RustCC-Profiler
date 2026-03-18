@@ -40,6 +40,7 @@ enum class RuleCategory {
     Ownership,     // Ownership and smart pointers / 所有权和智能指针
     Lifetime,      // Reference and pointer lifetime / 引用和指针生命周期
     Concurrency,   // Thread safety / 线程安全
+    Safety,        // Safety patterns (Option, Result, etc.) / 安全模式
     TypeSafety     // Type system safety / 类型系统安全 (future)
 };
 

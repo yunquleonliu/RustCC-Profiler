@@ -37,11 +37,18 @@ public:
     size_t getRuleCount() const;
     size_t getActiveRuleCount() const;
 
+    // Performance: stop after this many errors (0 = unlimited)
+    // 性能：在达到此错误数后停止（0 表示不限制）
+    void setMaxErrors(size_t n) { maxErrors_ = n; }
+    size_t getMaxErrors() const { return maxErrors_; }
+
 private:
     std::vector<std::unique_ptr<Rule>> rules_;
-    bool ownershipEnabled_ = true;
-    bool lifetimeEnabled_ = true;
-    bool concurrencyEnabled_ = true;
+    bool ownershipEnabled_    = true;
+    bool lifetimeEnabled_     = true;
+    bool concurrencyEnabled_  = true;
+    bool safetyEnabled_       = true;  // Option/Result/Borrow / Rust 安全模式
+    size_t maxErrors_         = 100;  // Stop after this many errors / 达到此错误数后停止
 };
 
 } // namespace tcc

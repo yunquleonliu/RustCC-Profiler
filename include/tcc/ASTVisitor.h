@@ -15,6 +15,8 @@
 #include <clang/AST/Decl.h>
 #include <clang/AST/Expr.h>
 #include <clang/AST/Stmt.h>
+#include <clang/AST/ExprCXX.h>
+#include <set>
 
 namespace tcc {
 
@@ -49,16 +51,37 @@ public:
     // Visit thread creation / 访问线程创建
     bool VisitCXXConstructExpr(clang::CXXConstructExpr* expr);
     
+    // Move semantics: track std::move calls / 移动语义：追踪 std::move 调用
+    bool VisitCallExpr(clang::CallExpr* expr);
+
+    // Move semantics: detect use-after-move / 移动语义：检测移动后使用
+    bool VisitDeclRefExpr(clang::DeclRefExpr* expr);
+
+    // Safety: detect unsafe .value()/.get() unwrap / 安全：检测不安全的 .value()/.get() 调用
+    bool VisitCXXMemberCallExpr(clang::CXXMemberCallExpr* expr);
+
+    // Safety: detect unchecked array subscript / 安全：检测未检查的数组下标
+    bool VisitArraySubscriptExpr(clang::ArraySubscriptExpr* expr);
+
+    // Safety: detect vector::operator[] (suggest .at()) / 安全：检测 vector::operator[]（建议使用 .at()）
+    bool VisitCXXOperatorCallExpr(clang::CXXOperatorCallExpr* expr);
+
     // Helper: Get source location / 辅助函数：获取源位置
     SourceLocation getSourceLocation(clang::SourceLocation loc) const;
     
     // Helper: Check if location is in main file / 辅助函数：检查位置是否在主文件
     bool isInMainFile(clang::SourceLocation loc) const;
 
+    // Performance: skip compiler-generated implicit code / 性能：跳过编译器生成的隐式代码
+    bool shouldVisitImplicitCode() const { return false; }
+
 private:
     clang::ASTContext& context_;
     const std::vector<std::unique_ptr<Rule>>& rules_;
     DiagnosticEngine& diagnostics_;
+
+    // Deduplication: track already-reported locations / 去重：追踪已报告的位置
+    mutable std::set<std::pair<unsigned, unsigned>> reportedMoveUses_;
 };
 
 } // namespace tcc

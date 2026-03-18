@@ -47,3 +47,13 @@ add_tcc_test(concurrency_fail_unsafe "fail/concurrency_unsafe.cpp" FALSE)
 
 # Complete test suite for MVP / MVP 完整测试套件
 # Total: 12 tests (6 pass, 6 fail) / 总计：12 个测试（6 个通过，6 个失败）
+
+# Move semantics tests (Rust-inspired: TCC-OWN-005/006/007)
+# 移动语义测试（Rust 风格：TCC-OWN-005/006/007）
+add_tcc_test(move_pass_safe "pass/move_semantics_safe.cpp" TRUE)
+add_tcc_test(move_fail_use_after_move "fail/move_use_after_move.cpp" FALSE)
+
+# Safety pattern tests (Rust-inspired: TCC-OPTION, TCC-RESULT, TCC-PANIC, TCC-SAFE)
+# 安全模式测试（Rust 风格：TCC-OPTION、TCC-RESULT、TCC-PANIC、TCC-SAFE）
+add_tcc_test(safety_pass_option_result "pass/safety_option_result.cpp" TRUE)
+add_tcc_test(safety_fail_violations "fail/safety_violations.cpp" FALSE)

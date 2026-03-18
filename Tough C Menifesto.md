@@ -1,4 +1,4 @@
-﻿# **Tough C Design Rational  adn Manifesto**
+﻿# **Tough C Design Rationale and Manifesto**
 
 ###  * C++ Federation Never Fails Programmer*
 
@@ -34,7 +34,7 @@ A language that says *“you are not allowed to do this”* too early  is effect
 
 > **“If your judgment turns out wrong, you are trapped.”**
 
-C++ never traps you, neven fails you.
+C++ never traps you, never fails you.
 
 ###   3. The Ultimate Value of the C++ Federation
 

@@ -62,6 +62,13 @@ public:
         : Rule(std::move(id), std::move(description), RuleCategory::Concurrency) {}
 };
 
+// Rule for safety patterns (Option, Result, etc.) / 安全模式规则
+class SafetyRule : public Rule {
+public:
+    explicit SafetyRule(std::string id, std::string description)
+        : Rule(std::move(id), std::move(description), RuleCategory::Safety) {}
+};
+
 // Rule registry / 规则注册表
 class RuleRegistry {
 public:

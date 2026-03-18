@@ -5,6 +5,9 @@
 #include "tcc/OwnershipRules.h"
 #include "tcc/LifetimeRules.h"
 #include "tcc/ConcurrencyRules.h"
+#include "tcc/MoveSemanticRules.h"
+#include "tcc/BorrowRules.h"
+#include "tcc/SafetyPatternRules.h"
 #include "tcc/ASTVisitor.h"
 
 namespace tcc {
@@ -37,6 +40,34 @@ void RuleEngine::initializeDefaultRules() {
         addRule(std::make_unique<ForbidRawPtrThreadSharingRule>());
         addRule(std::make_unique<RequireAtomicForSharedCounterRule>());
     }
+
+    // Register Rust-inspired safety rules / 注册 Rust 风格安全规则
+    if (ownershipEnabled_) {
+        // Move semantics rules (extend ownership category)
+        // 移动语义规则（扩展所有权类别）
+        addRule(std::make_unique<UseAfterMoveRule>());
+        addRule(std::make_unique<DoubleMoveRule>());
+        addRule(std::make_unique<EnforceMoveSemanticsRule>());
+    }
+    if (lifetimeEnabled_) {
+        // Borrow checker rules (extend lifetime category)
+        // 借用检查器规则（扩展生命周期类别）
+        addRule(std::make_unique<ConflictingBorrowRule>());
+        addRule(std::make_unique<BorrowOutlivesOwnerRule>());
+        addRule(std::make_unique<MultipleMutableBorrowRule>());
+        addRule(std::make_unique<BorrowDuringModificationRule>());
+    }
+    if (safetyEnabled_) {
+        // Option / Result / panic-safety rules
+        // Option / Result / panic 安全规则
+        addRule(std::make_unique<EnforceNullCheckRule>());
+        addRule(std::make_unique<PreferOptionalRule>());
+        addRule(std::make_unique<EnforceResultHandlingRule>());
+        addRule(std::make_unique<UncheckedErrorReturnRule>());
+        addRule(std::make_unique<DetectUnsafeUnwrapRule>());
+        addRule(std::make_unique<ForbidPanicRule>());
+        addRule(std::make_unique<EnforceBoundsCheckRule>());
+    }
 }
 
 void RuleEngine::addRule(std::unique_ptr<Rule> rule) {
@@ -56,6 +87,12 @@ void RuleEngine::analyze(clang::ASTContext& context, DiagnosticEngine& diagnosti
         if (!isCategoryEnabled(rule->getCategory())) {
             continue;
         }
+
+        // Performance: skip remaining rules if error cap is reached
+        // 性能：如果已达到错误上限，跳过剩余规则
+        if (maxErrors_ > 0 && diagnostics.getErrorCount() >= maxErrors_) {
+            break;
+        }
         
         // Execute rule / 执行规则
         rule->check(context, diagnostics);
@@ -73,6 +110,9 @@ void RuleEngine::enableCategory(RuleCategory category, bool enabled) {
         case RuleCategory::Concurrency:
             concurrencyEnabled_ = enabled;
             break;
+        case RuleCategory::Safety:
+            safetyEnabled_ = enabled;
+            break;
         default:
             break;
     }
@@ -86,6 +126,8 @@ bool RuleEngine::isCategoryEnabled(RuleCategory category) const {
             return lifetimeEnabled_;
         case RuleCategory::Concurrency:
             return concurrencyEnabled_;
+        case RuleCategory::Safety:
+            return safetyEnabled_;
         default:
             return false;
     }

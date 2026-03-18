@@ -12,6 +12,10 @@ set(TCC_SOURCES
     OwnershipRules.cpp
     LifetimeRules.cpp
     ConcurrencyRules.cpp
+    # Rust-inspired abstraction rules / Rust 风格抽象规则
+    MoveSemanticRules.cpp
+    BorrowRules.cpp
+    SafetyPatternRules.cpp
 )
 
 # LLVM/Clang components needed / 需要的 LLVM/Clang 组件

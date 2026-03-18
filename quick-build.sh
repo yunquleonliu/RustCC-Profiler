@@ -31,20 +31,56 @@ fi
 
 echo ""
 
-# Create build directory / 创建构建目录
-echo "Creating build directory... / 创建构建目录..."
-if [ -d "build" ]; then
-    echo "Build directory exists, cleaning... / 构建目录已存在，清理中..."
-    rm -rf build
+# Detect LLVM/Clang CMake dirs / 检测 LLVM/Clang 的 CMake 目录
+LLVM_CMAKE_DIR=""
+CLANG_CMAKE_DIR=""
+
+if command -v llvm-config &> /dev/null; then
+    LLVM_CMAKE_DIR="$(llvm-config --cmakedir 2>/dev/null || true)"
+    if [ -n "$LLVM_CMAKE_DIR" ] && [ -d "$LLVM_CMAKE_DIR" ]; then
+        echo "✓ LLVM CMake dir: $LLVM_CMAKE_DIR"
+        CANDIDATE_CLANG_DIR="$(dirname "$LLVM_CMAKE_DIR")/clang"
+        if [ -d "$CANDIDATE_CLANG_DIR" ]; then
+            CLANG_CMAKE_DIR="$CANDIDATE_CLANG_DIR"
+            echo "✓ Clang CMake dir: $CLANG_CMAKE_DIR"
+        else
+            echo "⚠ Clang CMake dir auto-detect failed. Will rely on CMake search."
+            echo "⚠ Clang CMake 目录自动检测失败，将依赖 CMake 默认搜索。"
+        fi
+    fi
 fi
-mkdir build
-echo "✓ Build directory created / 构建目录已创建"
+
+# Create Linux-specific build directory / 创建 Linux 专用构建目录
+echo "Creating build directory... / 创建构建目录..."
+BUILD_DIR="build-linux"
+if [ -d "$BUILD_DIR" ]; then
+    echo "Build directory exists, cleaning... / 构建目录已存在，清理中..."
+    rm -rf "$BUILD_DIR"
+fi
+mkdir "$BUILD_DIR"
+echo "✓ Build directory created: $BUILD_DIR / 构建目录已创建"
 echo ""
 
 # Configure / 配置
 echo "Configuring with CMake... / 使用 CMake 配置..."
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release -DTCC_BUILD_TESTS=ON -DTCC_BUILD_EXAMPLES=ON
+cd "$BUILD_DIR"
+
+CMAKE_ARGS=(
+  ..
+  -DCMAKE_BUILD_TYPE=Release
+  -DTCC_BUILD_TESTS=ON
+  -DTCC_BUILD_EXAMPLES=ON
+)
+
+if [ -n "$LLVM_CMAKE_DIR" ]; then
+    CMAKE_ARGS+=("-DLLVM_DIR=$LLVM_CMAKE_DIR")
+fi
+
+if [ -n "$CLANG_CMAKE_DIR" ]; then
+    CMAKE_ARGS+=("-DClang_DIR=$CLANG_CMAKE_DIR")
+fi
+
+cmake "${CMAKE_ARGS[@]}"
 
 echo "✓ Configuration complete / 配置完成"
 echo ""
@@ -73,13 +109,13 @@ echo "║  Build Complete! / 构建完成！                               ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 echo "Executable location / 可执行文件位置:"
-echo "  build/src/tcc-check"
+echo "  build-linux/src/tcc-check"
 echo ""
 echo "To install / 安装:"
-echo "  sudo cmake --install build --prefix /usr/local"
+echo "  sudo cmake --install build-linux --prefix /usr/local"
 echo ""
 echo "To test examples / 测试示例:"
-echo "  ./build/src/tcc-check examples/01_smart_pointers.tcc"
+echo "  ./build-linux/src/tcc-check examples/01_smart_pointers.tcc"
 echo ""
 echo "For more information / 更多信息:"
 echo "  See BUILD.md and PROJECT_STRUCTURE.md"

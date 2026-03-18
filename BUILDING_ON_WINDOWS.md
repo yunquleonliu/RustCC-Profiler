@@ -1,5 +1,10 @@
 ﻿# Building Tough C on Windows / 在 Windows 上构建 Tough C
 
+> Recommendation / 建议:
+> For first clean verification, use Linux build first.
+> 第一次干净验证建议优先走 Linux 构建。
+> See: `BUILDING_ON_LINUX.md`
+
 ## 🔧 Prerequisites / 先决条件
 
 ### Required / 必需
@@ -184,5 +189,10 @@ This is often easier for quick validation!
 The project structure is complete and correct. LLVM is only needed for **building**, not for understanding the code.
 项目结构完整且正确。LLVM 仅用于**构建**，而不是理解代码。
 
-All source code is readable and well-documented without building!
-所有源代码无需构建即可读取且文档完善！
+All source code is readable and well-documented without building.
+所有源代码无需构建即可阅读并理解。
+
+Current local blocker reminder / 当前本机阻塞提醒：
+
+- If `LLVM_DIR-NOTFOUND` appears in `build/CMakeCache.txt`, install LLVM/Clang first.
+- 如果 `build/CMakeCache.txt` 出现 `LLVM_DIR-NOTFOUND`，请先安装 LLVM/Clang。
