@@ -1,4 +1,4 @@
-# Rust C/C++ Quick Start Script
+﻿# Rust C/C++ Quick Start Script
 # Rust C/C++ 快速启动脚本
 # Windows PowerShell version / Windows PowerShell 版本
 
@@ -179,7 +179,7 @@ Write-Host "To install / 安装:" -ForegroundColor Cyan
 Write-Host "  cmake --install build --prefix <install_path>" -ForegroundColor White
 Write-Host ""
 Write-Host "To test examples / 测试示例:" -ForegroundColor Cyan
-Write-Host "  .\build\src\Release\rcc-check.exe examples\01_smart_pointers.tcc" -ForegroundColor White
+Write-Host "  .\build\src\Release\rcc-check.exe examples\01_smart_pointers_t.cc" -ForegroundColor White
 Write-Host ""
 Write-Host "For more information / 更多信息:" -ForegroundColor Cyan
 Write-Host "  See BUILD.md and PROJECT_STRUCTURE.md" -ForegroundColor White
