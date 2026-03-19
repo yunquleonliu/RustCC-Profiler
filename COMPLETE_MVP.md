@@ -1,4 +1,4 @@
-# Rust C/C++ Profiler - MVP Milestone Record
+﻿# Rust C/C++ Profiler - MVP Milestone Record
 # Rust C/C++ 分析器 - MVP 里程碑记录
 
 > Status note / 状态说明:
