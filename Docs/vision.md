@@ -1,4 +1,4 @@
-# Tough C — Vision
+# Rust C/C++ — Vision
 
 > This is a philosophy document.
 > 这是理念文档。
@@ -47,12 +47,12 @@ C++ never says this.
 
 ---
 
-## Tough C’s Role
+## Rust C/C++’s Role
 
-Tough C does not weaken C++.
+Rust C/C++ does not weaken C++.
 It **extends its promise**.
 
-Instead of forbidding power, Tough C **delays it**.
+Instead of forbidding power, Rust C/C++ **delays it**.
 
 It asks one question:
 
@@ -62,7 +62,7 @@ It asks one question:
 
 ## Reversible Safety
 
-Tough C enforces safety only where explicitly requested.
+Rust C/C++ enforces safety only where explicitly requested.
 
 - Safety is local (file-level or module-level)
 - Unsafe escape is always available
@@ -74,13 +74,13 @@ without sacrificing future options.
 
 ---
 
-## Tough C vs Rust (Philosophical Difference)
+## Rust C/C++ vs Rust (Philosophical Difference)
 
 Rust guarantees safety by removing options early.
 
-Tough C guarantees survivability by preserving options forever.
+Rust C/C++ guarantees survivability by preserving options forever.
 
-Tough C does not compete with Rust.
+Rust C/C++ does not compete with Rust.
 It serves engineers who need the **C++ federation guarantee**.
 
 ---
@@ -92,7 +92,7 @@ As AI generates more C/C++ code:
 - subtle lifetime and concurrency bugs increase
 - review capacity becomes the bottleneck
 
-Tough C shifts responsibility from *writing carefully*
+Rust C/C++ shifts responsibility from *writing carefully*
 to *allowing code to exist*.
 
 This is the correct abstraction for the AI era.
@@ -101,12 +101,13 @@ This is the correct abstraction for the AI era.
 
 ## Long-Term Vision
 
-- A well-defined Tough C profile
+- A well-defined Rust C/C++ profile
 - A fast, deterministic verifier
 - Clear failure modes
 - Zero impact on existing compilers
 - Full coexistence with standard C/C++
 
-Tough C aims to become:
+Rust C/C++ aims to become:
 
 > **The safety gate for serious C/C++ systems.**
+

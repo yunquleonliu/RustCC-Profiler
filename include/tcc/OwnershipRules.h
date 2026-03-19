@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Ownership Rules
-// Tough C 分析器 - 所有权规则
+// Rust C/C++ Profiler - Ownership Rules
+// Rust C/C++ 分析器 - 所有权规则
 //
 // Rules for detecting ownership violations
 // 用于检测所有权违规的规则
@@ -67,3 +67,4 @@ public:
 };
 
 } // namespace tcc
+

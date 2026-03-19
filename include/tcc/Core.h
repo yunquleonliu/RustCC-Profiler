@@ -1,8 +1,8 @@
-﻿// Tough C Profiler - Core Definitions
-// Tough C 分析器 - 核心定义
+// Rust C/C++ Profiler - Core Definitions
+// Rust C/C++ 分析器 - 核心定义
 // 
-// Core types and constants for the Tough C profiler system
-// Tough C 分析器系统的核心类型和常量
+// Core types and constants for the Rust C/C++ profiler system
+// Rust C/C++ 分析器系统的核心类型和常量
 
 #pragma once
 
@@ -21,7 +21,7 @@ constexpr int VERSION_PATCH = 0;
 // Exit codes / 退出码
 enum class ExitCode : int {
     Success = 0,              // All checks passed / 所有检查通过
-    RuleViolation = 1,        // TCC rules violated / 违反 TCC 规则
+    RuleViolation = 1,        // RCC rules violated / 违反 RCC 规则
     CompilationError = 2,     // C++ syntax errors / C++ 语法错误
     InternalError = 3,        // Tool internal error / 工具内部错误
     InvalidArguments = 4,     // Invalid command arguments / 无效命令参数
@@ -50,3 +50,4 @@ class RuleEngine;
 class ASTVisitor;
 
 } // namespace tcc
+

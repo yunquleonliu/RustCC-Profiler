@@ -1,5 +1,5 @@
-﻿// Tough C Example - Move Semantics (Should Pass)
-// Tough C 示例 - 移动语义（应该通过）
+// Rust C/C++ Example - Move Semantics (Should Pass)
+// Rust C/C++ 示例 - 移动语义（应该通过）
 // @tcc
 // Demonstrates: TCC-OWN-005, TCC-OWN-006, TCC-OWN-007
 
@@ -146,3 +146,4 @@ int main() {
     
     return 0;
 }
+

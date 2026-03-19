@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Move Semantic Rules
-// Tough C 分析器 - 移动语义规则
+// Rust C/C++ Profiler - Move Semantic Rules
+// Rust C/C++ 分析器 - 移动语义规则
 //
 // Rules for detecting use-after-move violations (Rust-style)
 // 用于检测移动后使用违规的规则（Rust 风格）
@@ -82,3 +82,4 @@ public:
 };
 
 } // namespace tcc
+

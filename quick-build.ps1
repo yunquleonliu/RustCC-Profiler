@@ -1,9 +1,9 @@
-﻿# Tough C Quick Start Script
-# Tough C 快速启动脚本
+# Rust C/C++ Quick Start Script
+# Rust C/C++ 快速启动脚本
 # Windows PowerShell version / Windows PowerShell 版本
 
 Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║  Tough C Profiler - Quick Build / 快速构建                 ║" -ForegroundColor Cyan
+Write-Host "║  Rust C/C++ Profiler - Quick Build / 快速构建                 ║" -ForegroundColor Cyan
 Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
 
@@ -50,7 +50,7 @@ if ($cl) {
     Write-Host "⚠ MSVC compiler (cl.exe) not found in PATH" -ForegroundColor Yellow
 }
 
-# Check for LLVM/Clang - REQUIRED for Tough C
+# Check for LLVM/Clang - REQUIRED for Rust C/C++
 Write-Host ""
 Write-Host "Checking LLVM/Clang installation... / 检查 LLVM/Clang 安装..." -ForegroundColor Yellow
 $llvmPaths = @(
@@ -74,8 +74,8 @@ if (-not $llvmFound) {
     Write-Host "✗ LLVM/Clang NOT FOUND! / 未找到 LLVM/Clang！" -ForegroundColor Red
     Write-Host ""
     Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Yellow
-    Write-Host "  Tough C requires LLVM/Clang libraries to function." -ForegroundColor White
-    Write-Host "  Tough C 需要 LLVM/Clang 库才能运行。" -ForegroundColor White
+    Write-Host "  Rust C/C++ requires LLVM/Clang libraries to function." -ForegroundColor White
+    Write-Host "  Rust C/C++ 需要 LLVM/Clang 库才能运行。" -ForegroundColor White
     Write-Host ""
     Write-Host "  Download from: https://github.com/llvm/llvm-project/releases" -ForegroundColor Cyan
     Write-Host "  Recommended: LLVM 17.0.x (includes Clang)" -ForegroundColor Cyan
@@ -111,8 +111,8 @@ Set-Location "build"
 $cmakeArgs = @(
     "..",
     "-DCMAKE_BUILD_TYPE=Release",
-    "-DTCC_BUILD_TESTS=ON",
-    "-DTCC_BUILD_EXAMPLES=ON"
+    "-DRCC_BUILD_TESTS=ON",
+    "-DRCC_BUILD_EXAMPLES=ON"
 )
 
 if ($llvmDir) {
@@ -173,14 +173,15 @@ Write-Host "║  Build Complete! / 构建完成！                              
 Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Green
 Write-Host ""
 Write-Host "Executable location / 可执行文件位置:" -ForegroundColor Cyan
-Write-Host "  build\src\Release\tcc-check.exe" -ForegroundColor White
+Write-Host "  build\src\Release\rcc-check.exe" -ForegroundColor White
 Write-Host ""
 Write-Host "To install / 安装:" -ForegroundColor Cyan
 Write-Host "  cmake --install build --prefix <install_path>" -ForegroundColor White
 Write-Host ""
 Write-Host "To test examples / 测试示例:" -ForegroundColor Cyan
-Write-Host "  .\build\src\Release\tcc-check.exe examples\01_smart_pointers.tcc" -ForegroundColor White
+Write-Host "  .\build\src\Release\rcc-check.exe examples\01_smart_pointers.tcc" -ForegroundColor White
 Write-Host ""
 Write-Host "For more information / 更多信息:" -ForegroundColor Cyan
 Write-Host "  See BUILD.md and PROJECT_STRUCTURE.md" -ForegroundColor White
 Write-Host ""
+

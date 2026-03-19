@@ -1,12 +1,12 @@
-﻿#!/bin/bash
-# Tough C Quick Start Script
-# Tough C 快速启动脚本
+#!/bin/bash
+# Rust C/C++ Quick Start Script
+# Rust C/C++ 快速启动脚本
 # Linux/macOS Bash version / Linux/macOS Bash 版本
 
 set -e
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║  Tough C Profiler - Quick Build / 快速构建                 ║"
+echo "║  Rust C/C++ Profiler - Quick Build / 快速构建                 ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 
@@ -68,8 +68,8 @@ cd "$BUILD_DIR"
 CMAKE_ARGS=(
   ..
   -DCMAKE_BUILD_TYPE=Release
-  -DTCC_BUILD_TESTS=ON
-  -DTCC_BUILD_EXAMPLES=ON
+  -DRCC_BUILD_TESTS=ON
+  -DRCC_BUILD_EXAMPLES=ON
 )
 
 if [ -n "$LLVM_CMAKE_DIR" ]; then
@@ -109,14 +109,15 @@ echo "║  Build Complete! / 构建完成！                               ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 echo "Executable location / 可执行文件位置:"
-echo "  build-linux/src/tcc-check"
+echo "  build-linux/src/rcc-check"
 echo ""
 echo "To install / 安装:"
 echo "  sudo cmake --install build-linux --prefix /usr/local"
 echo ""
 echo "To test examples / 测试示例:"
-echo "  ./build-linux/src/tcc-check examples/01_smart_pointers.tcc"
+echo "  ./build-linux/src/rcc-check examples/01_smart_pointers.tcc"
 echo ""
 echo "For more information / 更多信息:"
 echo "  See BUILD.md and PROJECT_STRUCTURE.md"
 echo ""
+

@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Rule Engine Implementation
-// Tough C 分析器 - 规则引擎实现
+// Rust C/C++ Profiler - Rule Engine Implementation
+// Rust C/C++ 分析器 - 规则引擎实现
 
 #include "tcc/RuleEngine.h"
 #include "tcc/OwnershipRules.h"
@@ -148,3 +148,4 @@ size_t RuleEngine::getActiveRuleCount() const {
 }
 
 } // namespace tcc
+

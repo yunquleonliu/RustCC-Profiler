@@ -1,4 +1,4 @@
-﻿# Building Tough C on Linux / 在 Linux 上构建 Tough C
+# Building Rust C/C++ on Linux / 在 Linux 上构建 Rust C/C++
 
 ## Scope / 适用范围
 
@@ -70,8 +70,8 @@ cmake -S . -B build-linux -G Ninja \
   -DCMAKE_BUILD_TYPE=Release \
   -DLLVM_DIR="$LLVM_CMAKE_DIR" \
   -DClang_DIR="$CLANG_CMAKE_DIR" \
-  -DTCC_BUILD_TESTS=ON \
-  -DTCC_BUILD_EXAMPLES=ON
+  -DRCC_BUILD_TESTS=ON \
+  -DRCC_BUILD_EXAMPLES=ON
 ```
 
 If `Clang_DIR` does not exist, omit it and set it explicitly later according to distro layout.
@@ -90,12 +90,12 @@ ctest --test-dir build-linux --output-on-failure
 
 ## 5. Validate Failure Examples / 验证失败示例
 
-After `tcc-check` is built:
-构建出 `tcc-check` 后：
+After `rcc-check` is built:
+构建出 `rcc-check` 后：
 
 ```bash
-./build-linux/src/tcc-check tests/data/fail/move_use_after_move.cpp
-./build-linux/src/tcc-check tests/data/fail/safety_violations.cpp
+./build-linux/src/rcc-check tests/data/fail/move_use_after_move.cpp
+./build-linux/src/rcc-check tests/data/fail/safety_violations.cpp
 ```
 
 ---
@@ -148,3 +148,4 @@ cmake -S . -B build-linux -G Ninja ...
 2. 跑全量测试。
 3. 跑失败示例并采集诊断输出。
 4. 提交结果或修复。
+

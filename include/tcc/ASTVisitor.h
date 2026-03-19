@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - AST Visitor
-// Tough C 分析器 - AST 访问者
+// Rust C/C++ Profiler - AST Visitor
+// Rust C/C++ 分析器 - AST 访问者
 //
 // Base class for traversing Clang AST and applying rules
 // 用于遍历 Clang AST 和应用规则的基类
@@ -85,3 +85,4 @@ private:
 };
 
 } // namespace tcc
+

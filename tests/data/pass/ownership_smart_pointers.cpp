@@ -1,7 +1,7 @@
-﻿// Test file for correct ownership patterns
+// Test file for correct ownership patterns
 // 正确所有权模式测试文件
-// This should pass all TCC checks
-// 这应该通过所有 TCC 检查
+// This should pass all RCC checks
+// 这应该通过所有 RCC 检查
 // @tcc
 
 #include <memory>

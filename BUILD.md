@@ -1,5 +1,5 @@
-﻿# Tough C Profiler - Building and Usage Guide
-# Tough C 分析器 - 构建和使用指南
+# Rust C/C++ Profiler - Building and Usage Guide
+# Rust C/C++ 分析器 - 构建和使用指南
 
 ## Quick Start / 快速开始
 
@@ -56,23 +56,23 @@ cmake --install . --prefix /usr/local
 
 ```bash
 # Check a single file / 检查单个文件
-tcc-check myfile.tcc
+rcc-check myfile_t.cc
 
 # Check multiple files / 检查多个文件
-tcc-check file1.tcc file2.tcc
+rcc-check file1_t.cc file2_t.cc
 
 # With compilation database / 使用编译数据库
-tcc-check -p build/ src/main.tcc
+rcc-check -p build/ src/main_t.cc
 ```
 
 ### File Markers / 文件标记
 
-TCC analyzes files that have either:
-TCC 分析具有以下任一标记的文件：
+RCC analyzes files that have either:
+RCC 分析具有以下任一标记的文件：
 
-1. **`.tcc` extension** / **`.tcc` 扩展名**
+1. **`_t.cc` extension** / **`_t.cc` 扩展名**
    ```cpp
-   // myfile.tcc
+   // myfile_t.cc
    #include <memory>
    // ... your code
    ```
@@ -89,19 +89,19 @@ TCC 分析具有以下任一标记的文件：
 
 ```bash
 # Show version / 显示版本
-tcc-check --version
+rcc-check --version
 
 # Verbose output / 详细输出
-tcc-check --verbose myfile.tcc
+rcc-check --verbose myfile_t.cc
 
 # Disable specific checks / 禁用特定检查
-tcc-check --no-ownership myfile.tcc   # Disable ownership / 禁用所有权
-tcc-check --no-lifetime myfile.tcc    # Disable lifetime / 禁用生命周期
-tcc-check --no-concurrency myfile.tcc # Disable concurrency / 禁用并发
-tcc-check --no-safety myfile.tcc      # Disable safety patterns / 禁用安全模式
+rcc-check --no-ownership myfile_t.cc   # Disable ownership / 禁用所有权
+rcc-check --no-lifetime myfile_t.cc    # Disable lifetime / 禁用生命周期
+rcc-check --no-concurrency myfile_t.cc # Disable concurrency / 禁用并发
+rcc-check --no-safety myfile_t.cc      # Disable safety patterns / 禁用安全模式
 
 # Combine options / 组合选项
-tcc-check --verbose --no-concurrency myfile.tcc
+rcc-check --verbose --no-concurrency myfile_t.cc
 ```
 
 ---
@@ -111,12 +111,12 @@ tcc-check --verbose --no-concurrency myfile.tcc
 ### Error Format / 错误格式
 
 ```
-filename.tcc:10:5: error / 错误: Use of 'new' operator forbidden [TCC-OWN-001]
+filename_t.cc:10:5: error / 错误: Use of 'new' operator forbidden [TCC-OWN-001]
   Fix suggestions / 修复建议:
     → Use std::make_unique<T>() instead
   Opt-out options / 退出选项:
     ⚠ Remove @tcc annotation to use raw C++
-    ⚠ Move file out of TCC directory
+    ⚠ Move file out of RCC directory
 ```
 
 ### Error Categories / 错误类别
@@ -137,27 +137,27 @@ filename.tcc:10:5: error / 错误: Use of 'new' operator forbidden [TCC-OWN-001]
 ### CMake Integration / CMake 集成
 
 ```cmake
-# Add TCC check as custom target / 添加 TCC 检查作为自定义目标
-add_custom_target(tcc_check
-    COMMAND tcc-check ${CMAKE_SOURCE_DIR}/src/*.tcc
-    COMMENT "Running Tough C checks / 运行 Tough C 检查"
+# Add RCC check as custom target / 添加 RCC 检查作为自定义目标
+add_custom_target(rcc_check
+    COMMAND rcc-check ${CMAKE_SOURCE_DIR}/src/*_t.cc
+    COMMENT "Running Rust C/C++ checks / 运行 Rust C/C++ 检查"
 )
 
-# Run TCC before build / 在构建前运行 TCC
-add_dependencies(my_target tcc_check)
+# Run RCC before build / 在构建前运行 RCC
+add_dependencies(my_target rcc_check)
 ```
 
 ### CI Integration / CI 集成
 
 ```yaml
 # GitHub Actions example / GitHub Actions 示例
-- name: Run TCC Checks
+- name: Run RCC Checks
   run: |
-    tcc-check src/**/*.tcc
+    rcc-check src/**/*_t.cc
     
-# Fail build on TCC errors / TCC 错误时失败构建
-- name: TCC Check
-  run: tcc-check src/**/*.tcc || exit 1
+# Fail build on RCC errors / RCC 错误时失败构建
+- name: RCC Check
+  run: rcc-check src/**/*_t.cc || exit 1
 ```
 
 ---
@@ -167,27 +167,27 @@ add_dependencies(my_target tcc_check)
 See the `examples/` directory for:
 参见 `examples/` 目录以获取：
 
-- ✓ `01_smart_pointers.tcc` - Correct ownership / 正确的所有权
-- ✗ `02_raw_pointer_violations.tcc` - Ownership errors / 所有权错误
-- ✓ `03_lifetime_safety.tcc` - Safe lifetime / 安全的生命周期
-- ✗ `04_lifetime_violations.tcc` - Lifetime errors / 生命周期错误
-- ✓ `05_thread_safety.tcc` - Thread-safe patterns / 线程安全模式
-- ✗ `06_thread_violations.tcc` - Concurrency errors / 并发错误
-- ✓ `07_move_semantics.tcc` - Move-safe patterns / 移动安全模式
-- ✗ `08_move_violations.tcc` - Use-after-move and double-move / 移动后使用与双重移动
-- ✓ `09_borrow_checker.tcc` - Borrow-safe patterns / 借用安全模式
-- ✗ `10_borrow_violations.tcc` - Borrow conflicts / 借用冲突
-- ✓ `11_option_result_patterns.tcc` - Option/Result best practices / Option/Result 最佳实践
-- ✗ `12_safety_violations.tcc` - Safety violations / 安全违规
+- ✓ `01_smart_pointers_t.cc` - Correct ownership / 正确的所有权
+- ✗ `02_raw_pointer_violations_t.cc` - Ownership errors / 所有权错误
+- ✓ `03_lifetime_safety_t.cc` - Safe lifetime / 安全的生命周期
+- ✗ `04_lifetime_violations_t.cc` - Lifetime errors / 生命周期错误
+- ✓ `05_thread_safety_t.cc` - Thread-safe patterns / 线程安全模式
+- ✗ `06_thread_violations_t.cc` - Concurrency errors / 并发错误
+- ✓ `07_move_semantics_t.cc` - Move-safe patterns / 移动安全模式
+- ✗ `08_move_violations_t.cc` - Use-after-move and double-move / 移动后使用与双重移动
+- ✓ `09_borrow_checker_t.cc` - Borrow-safe patterns / 借用安全模式
+- ✗ `10_borrow_violations_t.cc` - Borrow conflicts / 借用冲突
+- ✓ `11_option_result_patterns_t.cc` - Option/Result best practices / Option/Result 最佳实践
+- ✗ `12_safety_violations_t.cc` - Safety violations / 安全违规
 
 ---
 
 ## Escape Hatches / 逃生通道
 
-If TCC is too restrictive:
-如果 TCC 限制过多：
+If RCC is too restrictive:
+如果 RCC 限制过多：
 
-### Option 1: Remove TCC marker / 选项1：移除 TCC 标记
+### Option 1: Remove RCC marker / 选项1：移除 RCC 标记
 ```cpp
 // myfile.cpp (no @tcc annotation)
 // Now this is regular C++ / 现在这是普通 C++
@@ -197,14 +197,14 @@ int* ptr = new int(42);  // OK now / 现在可以了
 ### Option 2: Disable specific checks / 选项2：禁用特定检查
 ```cpp
 // @tcc-no-ownership
-// Still TCC, but ownership checks disabled
-// 仍然是 TCC，但所有权检查已禁用
+// Still RCC, but ownership checks disabled
+// 仍然是 RCC，但所有权检查已禁用
 ```
 
-### Option 3: Mix TCC and non-TCC files / 选项3：混合 TCC 和非 TCC 文件
+### Option 3: Mix RCC and non-RCC files / 选项3：混合 RCC 和非 RCC 文件
 ```
 src/
-  safe_module.tcc     ← TCC enforced / TCC 强制
+  safe_module_t.cc     ← RCC enforced / RCC 强制
   legacy_module.cpp   ← Regular C++ / 普通 C++
 ```
 
@@ -212,23 +212,23 @@ src/
 
 ## FAQ / 常见问题
 
-**Q: Does TCC change my code?**
-**Q: TCC 会改变我的代码吗？**
+**Q: Does RCC change my code?**
+**Q: RCC 会改变我的代码吗？**
 
-A: No. TCC only analyzes and reports. It never modifies your source files.
-A: 不会。TCC 只分析和报告。它从不修改您的源文件。
+A: No. RCC only analyzes and reports. It never modifies your source files.
+A: 不会。RCC 只分析和报告。它从不修改您的源文件。
 
-**Q: Can I use TCC with existing projects?**
-**Q: 我可以在现有项目中使用 TCC 吗？**
+**Q: Can I use RCC with existing projects?**
+**Q: 我可以在现有项目中使用 RCC 吗？**
 
-A: Yes. Add TCC markers incrementally to files you want to check.
-A: 可以。逐步向您想检查的文件添加 TCC 标记。
+A: Yes. Add RCC markers incrementally to files you want to check.
+A: 可以。逐步向您想检查的文件添加 RCC 标记。
 
 **Q: What if I need unsafe operations?**
 **Q: 如果我需要不安全的操作怎么办？**
 
-A: Remove the TCC marker from that specific file. TCC is opt-in per file.
-A: 从该特定文件移除 TCC 标记。TCC 是按文件选择加入的。
+A: Remove the RCC marker from that specific file. RCC is opt-in per file.
+A: 从该特定文件移除 RCC 标记。RCC 是按文件选择加入的。
 
 ---
 
@@ -242,3 +242,4 @@ A: 从该特定文件移除 TCC 标记。TCC 是按文件选择加入的。
 
 - Track implementation reality in [Working Track .md](Working%20Track%20.md)
   在 [Working Track .md](Working%20Track%20.md) 跟踪真实实现进度
+

@@ -1,4 +1,4 @@
-﻿# Building Tough C on Windows / 在 Windows 上构建 Tough C
+# Building Rust C/C++ on Windows / 在 Windows 上构建 Rust C/C++
 
 > Recommendation / 建议:
 > For first clean verification, use Linux build first.
@@ -14,15 +14,15 @@
 
 ### Why LLVM/Clang is Required / 为什么需要 LLVM/Clang
 
-Tough C is a **static analyzer** that parses C++ code using Clang's AST (Abstract Syntax Tree) libraries. This is the same technology used by:
-Tough C 是一个**静态分析器**，使用 Clang 的 AST（抽象语法树）库解析 C++ 代码。这与以下工具使用的技术相同：
+Rust C/C++ is a **static analyzer** that parses C++ code using Clang's AST (Abstract Syntax Tree) libraries. This is the same technology used by:
+Rust C/C++ 是一个**静态分析器**，使用 Clang 的 AST（抽象语法树）库解析 C++ 代码。这与以下工具使用的技术相同：
 
 - clang-tidy (C++ linter)
 - clangd (Language server)
 - Clang Static Analyzer
 
-**You cannot build Tough C without LLVM/Clang libraries**, just like you cannot build clang-tidy without them.
-**没有 LLVM/Clang 库就无法构建 Tough C**，就像无法在没有它们的情况下构建 clang-tidy 一样。
+**You cannot build Rust C/C++ without LLVM/Clang libraries**, just like you cannot build clang-tidy without them.
+**没有 LLVM/Clang 库就无法构建 Rust C/C++**，就像无法在没有它们的情况下构建 clang-tidy 一样。
 
 ---
 
@@ -64,13 +64,13 @@ $env:LLVM_DIR = "C:\path\to\vcpkg\installed\x64-windows"
 
 ---
 
-## 🏗️ Building Tough C / 构建 Tough C
+## 🏗️ Building Rust C/C++ / 构建 Rust C/C++
 
 Once LLVM is installed / 安装 LLVM 后：
 
 ```powershell
 # Clone or navigate to repository
-cd "D:\SyncWork\Tough C Profiler"
+cd "D:\SyncWork\Rust C/C++ Profiler"
 
 # Run quick build script
 .\quick-build.ps1
@@ -112,7 +112,7 @@ After successful build / 成功构建后：
 build/
   src/
     Release/
-      tcc-check.exe  ← Main executable / 主可执行文件
+      rcc-check.exe  ← Main executable / 主可执行文件
 ```
 
 ---
@@ -125,7 +125,7 @@ cd build
 ctest -C Release --output-on-failure
 
 # Test specific file
-.\src\Release\tcc-check.exe ..\examples\01_smart_pointers.tcc
+.\src\Release\rcc-check.exe ..\examples\01_smart_pointers_t.cc
 ```
 
 ---
@@ -157,15 +157,15 @@ Subsequent builds are much faster (1-2 minutes).
 
 ## 🚀 After Building / 构建完成后
 
-You can use Tough C:
-您可以使用 Tough C：
+You can use Rust C/C++:
+您可以使用 Rust C/C++：
 
 ```powershell
-# Check any .tcc file
-.\build\src\Release\tcc-check.exe myfile.tcc
+# Check any _t.cc file
+.\build\src\Release\rcc-check.exe myfile_t.cc
 
 # Or annotated C++ file
-.\build\src\Release\tcc-check.exe myfile.cpp  # with @tcc annotation
+.\build\src\Release\rcc-check.exe myfile.cpp  # with @tcc annotation
 ```
 
 ---
@@ -196,3 +196,4 @@ Current local blocker reminder / 当前本机阻塞提醒：
 
 - If `LLVM_DIR-NOTFOUND` appears in `build/CMakeCache.txt`, install LLVM/Clang first.
 - 如果 `build/CMakeCache.txt` 出现 `LLVM_DIR-NOTFOUND`，请先安装 LLVM/Clang。
+

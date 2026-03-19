@@ -1,8 +1,8 @@
-﻿# Tough C Profiler - Source CMake
-# Tough C 分析器 - 源码 CMake
+# Rust C/C++ Profiler - Source CMake
+# Rust C/C++ 分析器 - 源码 CMake
 
 # Collect all source files / 收集所有源文件
-set(TCC_SOURCES
+set(RCC_SOURCES
     main.cpp
     Diagnostic.cpp
     Rule.cpp
@@ -37,15 +37,16 @@ set(CLANG_LIBS
 )
 
 # Build executable / 构建可执行文件
-add_executable(tcc-check ${TCC_SOURCES})
+add_executable(rcc-check ${RCC_SOURCES})
 
 # Link libraries / 链接库
-target_link_libraries(tcc-check PRIVATE
+target_link_libraries(rcc-check PRIVATE
     ${CLANG_LIBS}
     ${LLVM_LIBS}
 )
 
 # Set output name / 设置输出名称
-set_target_properties(tcc-check PROPERTIES
-    OUTPUT_NAME "tcc-check"
+set_target_properties(rcc-check PROPERTIES
+    OUTPUT_NAME "rcc-check"
 )
+

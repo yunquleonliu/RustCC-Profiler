@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Lifetime Rules
-// Tough C 分析器 - 生命周期规则
+// Rust C/C++ Profiler - Lifetime Rules
+// Rust C/C++ 分析器 - 生命周期规则
 //
 // Rules for detecting lifetime violations
 // 用于检测生命周期违规的规则
@@ -78,3 +78,4 @@ public:
 };
 
 } // namespace tcc
+

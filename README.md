@@ -1,31 +1,31 @@
-# Tough C (TCC)
+# Rust C/C++ (RCC)
 
-**Tough C** is a pre-compilation profiler that enforces memory and concurrency safety rules for C/C++ *before* code is allowed to exist.
+**Rust C/C++** is a pre-compilation profiler that enforces memory and concurrency safety rules for C/C++ *before* code is allowed to exist.
 
-Tough C does not replace C or C++.  It **completes the C++ federation promise**.
+Rust C/C++ does not replace C or C++.  It **completes the C++ federation promise**.
 
 > *C Federation always covers your butt.*
 
 ---
 
-## What Is Tough C?
+## What Is Rust C/C++?
 
-Tough C is **not**:
+Rust C/C++ is **not**:
 - a new programming language
 - a new compiler
 - a style guide or lint tool
 
-Tough C **is**:
+Rust C/C++ **is**:
 - a **pre-compilation verifier**
 - with **hard rejection power**
-- enforcing a **Tough C profile**
+- enforcing a **Rust C/C++ profile**
 - while preserving **full C/C++ escape hatches**
 
-If code fails Tough C rules, it **does not get compiled**.
+If code fails Rust C/C++ rules, it **does not get compiled**.
 
 ---
 
-## Why Tough C Exists
+## Why Rust C/C++ Exists
 
 Programmers choose C/C++ not because they ignore danger, but because C++ makes a unique promise:
 
@@ -41,7 +41,7 @@ Languages that restrict capability *too early* trap engineers when their initial
 
 C++ never traps you.
 
-Tough C extends this promise by adding **reversible safety**.
+Rust C/C++ extends this promise by adding **reversible safety**.
 
 ---
 
@@ -51,8 +51,8 @@ Tough C extends this promise by adding **reversible safety**.
 - Power is **never removed**
 - Escape hatches always exist
 
-If Tough C becomes too restrictive:
-- move the file out of Tough C
+If Rust C/C++ becomes too restrictive:
+- move the file out of Rust C/C++
 - drop to raw C/C++
 - use pointer arithmetic, bit tricks, or hardware primitives
 
@@ -71,11 +71,11 @@ The real question becomes:
 
 > **Should this code be allowed to exist at all?**
 
-Tough C answers that question.
+Rust C/C++ answers that question.
 
 ---
 
-## What Tough C Enforces (MVP Scope)
+## What Rust C/C++ Enforces (MVP Scope)
 
 ### Core Safety Rules
 
@@ -85,7 +85,7 @@ Tough C answers that question.
 
 ### Rust-Inspired Abstractions
 
-Tough C integrates validated Rust memory safety abstractions:
+Rust C/C++ integrates validated Rust memory safety abstractions:
 
 - **Move Semantics** (TCC-OWN-005~007) - Use-after-move detection, ownership transfer tracking
 - **Borrow Checker** (TCC-BORROW-001~004) - Mutable/immutable borrow conflicts, lifetime binding
@@ -95,7 +95,7 @@ Tough C integrates validated Rust memory safety abstractions:
 
 See [Rust Abstractions Documentation](Docs/rust_abstractions.md) for complete details.
 
-Tough C does **not** try to prove programs correct.
+Rust C/C++ does **not** try to prove programs correct.
 It defines **what is acceptable to write**.
 
 ---
@@ -123,10 +123,10 @@ Recommended validation path:
 
 ## Documentation
 
-- [tough C .md](Docs/tough%20C%20.md) - Core specification and semantic enhancements
+- [rust_c_cpp_spec.md](Docs/rust_c_cpp_spec.md) - Core specification and semantic enhancements
 - [Rust Abstractions](Docs/rust_abstractions.md) - Integrated Rust safety patterns
 - [Vision](Docs/vision.md) - Project philosophy and goals
-- [Manifesto](Tough%20C%20Menifesto.md) - Design rationale
+- [Manifesto](Rust_Cpp_Manifesto.md) - Design rationale
 - [Building](BUILD.md) - Build instructions
 - [Build on Linux](BUILDING_ON_LINUX.md) - Clean Linux verification workflow
 - [Build on Windows](BUILDING_ON_WINDOWS.md) - Windows setup and troubleshooting
@@ -143,5 +143,6 @@ TBD (likely permissive, e.g. Apache-2.0 or MIT)
 
 ## Slogan
 
-> **Tough C does not reduce what C/C++ can do.  
+> **Rust C/C++ does not reduce what C/C++ can do.  
 It only delays when you must do it.**
+

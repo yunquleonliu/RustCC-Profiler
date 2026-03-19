@@ -1,6 +1,6 @@
-﻿name: Tough C CI / Tough C 持续集成
-# Continuous integration for Tough C Profiler
-# Tough C 分析器的持续集成
+name: Rust C/C++ CI / Rust C/C++ 持续集成
+# Continuous integration for Rust C/C++ Profiler
+# Rust C/C++ 分析器的持续集成
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
     
     - name: Configure CMake / 配置 CMake
       run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=Release -DTCC_BUILD_TESTS=ON
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DRCC_BUILD_TESTS=ON
     
     - name: Build / 构建
       run: cmake --build build --config Release
@@ -43,5 +43,6 @@ jobs:
     - name: Upload artifacts / 上传构建产物
       uses: actions/upload-artifact@v3
       with:
-        name: tcc-check-${{ matrix.os }}-llvm${{ matrix.llvm-version }}
-        path: build/src/tcc-check*
+        name: rcc-check-${{ matrix.os }}-llvm${{ matrix.llvm-version }}
+        path: build/src/rcc-check*
+

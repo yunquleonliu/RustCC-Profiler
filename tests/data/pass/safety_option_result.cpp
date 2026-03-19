@@ -1,5 +1,5 @@
-﻿// TCC Test: Safe optional/result usage (should pass)
-// TCC 测试：安全的 optional/result 使用（应通过）
+// RCC Test: Safe optional/result usage (should pass)
+// RCC 测试：安全的 optional/result 使用（应通过）
 // @tcc
 
 #include <optional>

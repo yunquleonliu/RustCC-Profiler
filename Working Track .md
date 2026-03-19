@@ -1,4 +1,4 @@
-﻿# Tough C Profiler - Working Track / 工作进度跟踪
+# Rust C/C++ Profiler - Working Track / 工作进度跟踪
 # Live Progress Tracking / 实时进度跟踪
 
 ## Current Snapshot / 当前快照
@@ -32,8 +32,8 @@ What is not yet true / 当前还不成立的部分：
 
 - The project is not currently build-confirmed on this machine.
 - 该项目目前未在这台机器上完成可构建验证。
-- `tcc-check` has not been produced in `build/`.
-- `build/` 中还没有生成 `tcc-check`。
+- `rcc-check` has not been produced in `build/`.
+- `build/` 中还没有生成 `rcc-check`。
 - Several new rule implementations still contain placeholder logic.
 - 多个新增规则实现仍然包含占位逻辑。
 - The old statement "MVP 100% complete" is no longer accurate for the current code state.
@@ -212,7 +212,7 @@ Install LLVM/Clang on Windows and reconfigure CMake.
 Expected outcome / 预期结果：
 
 - generate actual build files
-- produce `tcc-check`
+- produce `rcc-check`
 - run pass/fail tests
 - capture real diagnostics from violation examples
 
@@ -246,5 +246,6 @@ Files to revisit / 需要回看的文件：
 
 ## Honest Status Line / 真实状态一句话
 
-Tough C Profiler is now a meaningful in-progress static analysis project with real code, real rule modules, and expanded safety scope, but it is not yet locally build-proven or feature-complete.
-Tough C Profiler 现在已经是一个有真实代码、真实规则模块、并扩展了安全范围的静态分析项目，但它还没有在本机完成构建验证，也还没有达到功能完整状态。
+Rust C/C++ Profiler is now a meaningful in-progress static analysis project with real code, real rule modules, and expanded safety scope, but it is not yet locally build-proven or feature-complete.
+Rust C/C++ Profiler 现在已经是一个有真实代码、真实规则模块、并扩展了安全范围的静态分析项目，但它还没有在本机完成构建验证，也还没有达到功能完整状态。
+

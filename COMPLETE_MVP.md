@@ -1,5 +1,5 @@
-﻿# Tough C Profiler - MVP Milestone Record
-# Tough C 分析器 - MVP 里程碑记录
+# Rust C/C++ Profiler - MVP Milestone Record
+# Rust C/C++ 分析器 - MVP 里程碑记录
 
 > Status note / 状态说明:
 > This file records the historical MVP milestone.
@@ -74,12 +74,12 @@
 ## 🏗️ Architecture / 架构
 
 ```
-Tough C Profiler
+Rust C/C++ Profiler
 ├── Core System / 核心系统
 │   ├── Core.h - Types & constants / 类型与常量
 │   ├── Diagnostic.h/cpp - Error reporting / 错误报告
 │   ├── Rule.h/cpp - Rule base classes / 规则基类
-│   ├── FileDetector.h/cpp - .tcc detection / .tcc 检测
+│   ├── FileDetector.h/cpp - _t.cc detection / _t.cc 检测
 │   └── RuleEngine.h/cpp - Rule orchestration / 规则编排
 │
 ├── AST Analysis / AST 分析
@@ -119,7 +119,7 @@ filename.cpp:10:5: error / 错误: Use of 'new' operator forbidden [TCC-OWN-001]
     → Use std::make_shared<T>() for shared ownership
   Opt-out options / 退出选项:
     ⚠ Remove @tcc annotation to use raw C++
-    ⚠ Move file out of TCC directory
+    ⚠ Move file out of RCC directory
 ```
 
 ### 3. Native Bilingual / 原生双语
@@ -129,8 +129,8 @@ filename.cpp:10:5: error / 错误: Use of 'new' operator forbidden [TCC-OWN-001]
 
 ### 4. Flexible Opt-in / 灵活的选择加入
 ```cpp
-// Method 1: .tcc extension / 方法1：.tcc 扩展名
-// myfile.tcc
+// Method 1: _t.cc extension / 方法1：_t.cc 扩展名
+// myfile_t.cc
 
 // Method 2: @tcc annotation / 方法2：@tcc 注解
 // myfile.cpp
@@ -139,9 +139,9 @@ filename.cpp:10:5: error / 错误: Use of 'new' operator forbidden [TCC-OWN-001]
 
 ### 5. Category Control / 类别控制
 ```bash
-tcc-check --no-ownership file.tcc    # Disable ownership checks
-tcc-check --no-lifetime file.tcc     # Disable lifetime checks
-tcc-check --no-concurrency file.tcc  # Disable concurrency checks
+rcc-check --no-ownership file_t.cc    # Disable ownership checks
+rcc-check --no-lifetime file_t.cc     # Disable lifetime checks
+rcc-check --no-concurrency file_t.cc  # Disable concurrency checks
 ```
 
 ---
@@ -150,19 +150,19 @@ tcc-check --no-concurrency file.tcc  # Disable concurrency checks
 
 ### Basic Check / 基本检查
 ```bash
-tcc-check myfile.tcc
+rcc-check myfile_t.cc
 ```
 
 ### With Options / 带选项
 ```bash
-tcc-check --verbose myfile.tcc
-tcc-check --no-concurrency myfile.tcc
+rcc-check --verbose myfile_t.cc
+rcc-check --no-concurrency myfile_t.cc
 ```
 
 ### CI Integration / CI 集成
 ```yaml
-- name: Run TCC Checks
-  run: tcc-check src/**/*.tcc
+- name: Run RCC Checks
+  run: rcc-check src/**/*_t.cc
 ```
 
 ---
@@ -183,7 +183,7 @@ tcc-check --no-concurrency myfile.tcc
 
 ### Philosophy / 理念
 - ✅ `vision.md` - Project vision / 项目愿景
-- ✅ `Tough C Menifesto.md` - Design philosophy / 设计理念
+- ✅ `Rust C/C++ Manifesto.md` - Design philosophy / 设计理念
 
 ---
 
@@ -240,8 +240,8 @@ ctest -C Release
 ### Core Principles / 核心原则
 
 1. **Safety is Opt-in / 安全是可选的**
-   - Files must explicitly opt into TCC checks
-   - 文件必须显式选择加入 TCC 检查
+   - Files must explicitly opt into RCC checks
+   - 文件必须显式选择加入 RCC 检查
 
 2. **Power is Never Removed / 能力永不移除**
    - Can always opt-out per file
@@ -257,8 +257,8 @@ ctest -C Release
 
 ### The C++ Federation Promise / C++ 联邦承诺
 
-Tough C extends the C++ federation promise:
-Tough C 扩展了 C++ 联邦承诺：
+Rust C/C++ extends the C++ federation promise:
+Rust C/C++ 扩展了 C++ 联邦承诺：
 
 > **"You can do anything, but you must choose when to pay the cost."**
 > **"你可以做任何事，但你必须选择何时付出代价。"**
@@ -295,8 +295,8 @@ Tough C 扩展了 C++ 联邦承诺：
 ## 📞 Contact & Contribution / 联系与贡献
 
 **Project Philosophy / 项目理念**:
-Tough C is not about restricting C++, it's about **postponing when you need its full power**.
-Tough C 不是限制 C++，而是**延后你需要其全部能力的时机**。
+Rust C/C++ is not about restricting C++, it's about **postponing when you need its full power**.
+Rust C/C++ 不是限制 C++，而是**延后你需要其全部能力的时机**。
 
 **Remember / 记住**:
 > **C++ Federation Never Fails You**
@@ -310,3 +310,4 @@ Tough C 不是限制 C++，而是**延后你需要其全部能力的时机**。
 
 Production readiness should be decided by fresh build + test evidence.
 是否可投入生产应以最新构建和测试证据为准。
+

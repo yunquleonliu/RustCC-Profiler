@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Concurrency Rules
-// Tough C 分析器 - 并发规则
+// Rust C/C++ Profiler - Concurrency Rules
+// Rust C/C++ 分析器 - 并发规则
 //
 // Rules for detecting thread safety violations
 // 用于检测线程安全违规的规则
@@ -65,3 +65,4 @@ public:
 };
 
 } // namespace tcc
+

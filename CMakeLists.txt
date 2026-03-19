@@ -1,9 +1,9 @@
-﻿# Tough C Profiler - CMake Configuration
-# Tough C 分析器 - CMake 配置
+# Rust C/C++ Profiler - CMake Configuration
+# Rust C/C++ 分析器 - CMake 配置
 # Version: 0.1.0-MVP
 
 cmake_minimum_required(VERSION 3.20)
-project(ToughCProfiler 
+project(RustCCppProfiler 
     VERSION 0.1.0
     LANGUAGES CXX
     DESCRIPTION "Pre-compilation safety profiler for C/C++ - 面向 C/C++ 的预编译安全分析器"
@@ -18,9 +18,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Build options / 构建选项
-option(TCC_BUILD_TESTS "Build test suite / 构建测试套件" ON)
-option(TCC_BUILD_EXAMPLES "Build examples / 构建示例" ON)
-option(TCC_ENABLE_WARNINGS "Enable all compiler warnings / 启用所有编译器警告" ON)
+option(RCC_BUILD_TESTS "Build test suite / 构建测试套件" ON)
+option(RCC_BUILD_EXAMPLES "Build examples / 构建示例" ON)
+option(RCC_ENABLE_WARNINGS "Enable all compiler warnings / 启用所有编译器警告" ON)
 
 # Find LLVM and Clang / 查找 LLVM 和 Clang
 find_package(LLVM REQUIRED CONFIG)
@@ -39,7 +39,7 @@ add_definitions(${LLVM_DEFINITIONS})
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # Compiler warnings / 编译器警告
-if(TCC_ENABLE_WARNINGS)
+if(RCC_ENABLE_WARNINGS)
     if(MSVC)
         add_compile_options(/W4 /WX)
     else()
@@ -51,18 +51,18 @@ endif()
 add_subdirectory(src)
 
 # Tests / 测试
-if(TCC_BUILD_TESTS)
+if(RCC_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
 
 # Examples / 示例
-if(TCC_BUILD_EXAMPLES)
+if(RCC_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
 # Installation / 安装配置
-install(TARGETS tcc-check
+install(TARGETS rcc-check
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -72,3 +72,4 @@ install(DIRECTORY include/
     DESTINATION include
     FILES_MATCHING PATTERN "*.h"
 )
+

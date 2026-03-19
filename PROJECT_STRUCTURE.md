@@ -1,10 +1,10 @@
-﻿# Tough C Profiler - Project Structure
-# Tough C 分析器 - 项目结构
+# Rust C/C++ Profiler - Project Structure
+# Rust C/C++ 分析器 - 项目结构
 
 ## Directory Layout / 目录布局
 
 ```text
-Tough C Profiler/
+Rust C/C++ Profiler/
 |-- CMakeLists.txt
 |-- README.md
 |-- BUILD.md
@@ -12,13 +12,13 @@ Tough C Profiler/
 |-- BUILDING_ON_WINDOWS.md
 |-- COMPLETE_MVP.md
 |-- PROJECT_STRUCTURE.md
-|-- Tough C Menifesto.md
+|-- Rust C/C++ Manifesto.md
 |-- Working Track .md
 |-- quick-build.sh
 |-- quick-build.ps1
 |-- Docs/
 |   |-- INDEX.md
-|   |-- tough C .md
+|   |-- rust_c_cpp_spec.md
 |   |-- rust_abstractions.md
 |   `-- vision.md
 |-- include/
@@ -55,18 +55,18 @@ Tough C Profiler/
 |       |-- pass/
 |       `-- fail/
 `-- examples/
-    |-- 01_smart_pointers.tcc
-    |-- 02_raw_pointer_violations.tcc
-    |-- 03_lifetime_safety.tcc
-    |-- 04_lifetime_violations.tcc
-    |-- 05_thread_safety.tcc
-    |-- 06_thread_violations.tcc
-    |-- 07_move_semantics.tcc
-    |-- 08_move_violations.tcc
-    |-- 09_borrow_checker.tcc
-    |-- 10_borrow_violations.tcc
-    |-- 11_option_result_patterns.tcc
-    `-- 12_safety_violations.tcc
+    |-- 01_smart_pointers_t.cc
+    |-- 02_raw_pointer_violations_t.cc
+    |-- 03_lifetime_safety_t.cc
+    |-- 04_lifetime_violations_t.cc
+    |-- 05_thread_safety_t.cc
+    |-- 06_thread_violations_t.cc
+    |-- 07_move_semantics_t.cc
+    |-- 08_move_violations_t.cc
+    |-- 09_borrow_checker_t.cc
+    |-- 10_borrow_violations_t.cc
+    |-- 11_option_result_patterns_t.cc
+    `-- 12_safety_violations_t.cc
 ```
 
 ## Module Status / 模块状态
@@ -97,3 +97,4 @@ Tough C Profiler/
 - 当前进度与阻塞见 `Working Track .md`。
 - Historical "MVP complete" wording should be interpreted as milestone-level, not full implementation completeness.
 - 历史上的 “MVP 完成” 表述应视作里程碑语义，不等于当前实现已全部完工。
+

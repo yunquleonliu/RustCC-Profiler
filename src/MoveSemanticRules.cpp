@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Move Semantic Rules Implementation
-// Tough C 分析器 - 移动语义规则实现
+// Rust C/C++ Profiler - Move Semantic Rules Implementation
+// Rust C/C++ 分析器 - 移动语义规则实现
 
 #include "tcc/MoveSemanticRules.h"
 #include "tcc/DiagnosticHelper.h"
@@ -171,3 +171,4 @@ bool EnforceMoveSemanticsRule::hasProperMoveSemantics(
 }
 
 } // namespace tcc
+

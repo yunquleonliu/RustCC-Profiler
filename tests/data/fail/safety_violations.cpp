@@ -1,5 +1,5 @@
-﻿// TCC Test: Safety pattern violations (should fail)
-// TCC 测试：安全模式违规（应失败）
+// RCC Test: Safety pattern violations (should fail)
+// RCC 测试：安全模式违规（应失败）
 // @tcc
 // Violations: TCC-PANIC-001, TCC-SAFE-001
 

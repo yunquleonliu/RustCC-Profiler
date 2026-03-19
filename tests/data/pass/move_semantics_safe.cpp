@@ -1,5 +1,5 @@
-﻿// TCC Test: Safe move semantics patterns (should pass)
-// TCC 测试：安全的移动语义模式（应通过）
+// RCC Test: Safe move semantics patterns (should pass)
+// RCC 测试：安全的移动语义模式（应通过）
 // @tcc
 
 #include <memory>

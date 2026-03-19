@@ -1,5 +1,5 @@
-﻿// Tough C Example - Option and Result Patterns (Should Pass)
-// Tough C 示例 - Option 和 Result 模式（应该通过）
+// Rust C/C++ Example - Option and Result Patterns (Should Pass)
+// Rust C/C++ 示例 - Option 和 Result 模式（应该通过）
 // @tcc
 // Demonstrates: TCC-OPTION-001, TCC-OPTION-002, TCC-RESULT-001
 
@@ -297,3 +297,4 @@ int main() {
     
     return 0;
 }
+

@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Rule Engine
-// Tough C 分析器 - 规则引擎
+// Rust C/C++ Profiler - Rule Engine
+// Rust C/C++ 分析器 - 规则引擎
 //
 // Orchestrates rule checking across the AST
 // 协调整个 AST 的规则检查
@@ -52,3 +52,4 @@ private:
 };
 
 } // namespace tcc
+

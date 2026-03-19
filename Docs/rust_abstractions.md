@@ -1,5 +1,5 @@
-﻿# Tough C 中的 Rust 抽象集成
-# Rust Abstractions in Tough C
+# Rust C/C++ 中的 Rust 抽象集成
+# Rust Abstractions in Rust C/C++
 
 > Implementation note / 实现说明:
 > This document contains design intent plus partially implemented features.
@@ -10,9 +10,9 @@
 
 ## 概述 / Overview
 
-本文档描述了如何将经过验证的 Rust 内存安全抽象集成到 Tough C (Rust C) Profiler 中。这些抽象提供了编译时内存安全保证，同时保持与 C/C++ 的兼容性。
+本文档描述了如何将经过验证的 Rust 内存安全抽象集成到 Rust C/C++ (Rust C) Profiler 中。这些抽象提供了编译时内存安全保证，同时保持与 C/C++ 的兼容性。
 
-This document describes how validated Rust memory safety abstractions are integrated into the Tough C (Rust C) Profiler. These abstractions provide compile-time memory safety guarantees while maintaining C/C++ compatibility.
+This document describes how validated Rust memory safety abstractions are integrated into the Rust C/C++ (Rust C) Profiler. These abstractions provide compile-time memory safety guarantees while maintaining C/C++ compatibility.
 
 ---
 
@@ -31,7 +31,7 @@ Rust's ownership system ensures:
 - When the owner goes out of scope, the value is freed
 - Values can be moved or borrowed
 
-#### Tough C 实现 / Implementation in Tough C
+#### Rust C/C++ 实现 / Implementation in Rust C/C++
 
 ```cpp
 // TCC-OWN-005: Move Semantics Tracking
@@ -79,7 +79,7 @@ Rust enforces borrowing rules:
 - Multiple immutable references (&T) OR one mutable reference (&mut T)
 - References cannot outlive their owner
 
-#### Tough C 实现 / Implementation in Tough C
+#### Rust C/C++ 实现 / Implementation in Rust C/C++
 
 ```cpp
 // TCC-BORROW-001: Mutable Aliasing Detection
@@ -121,7 +121,7 @@ int main() {
 
 Eliminates null pointer errors by forcing handling of "no value" cases.
 
-#### Tough C 实现 / Implementation in Tough C
+#### Rust C/C++ 实现 / Implementation in Rust C/C++
 
 ```cpp
 // TCC-OPTION-001: Enforce explicit null checks
@@ -161,7 +161,7 @@ int main() {
 
 Forces error handling, avoiding exception propagation.
 
-#### Tough C 实现 / Implementation in Tough C
+#### Rust C/C++ 实现 / Implementation in Rust C/C++
 
 ```cpp
 // TCC-RESULT-001: Enforce error handling
@@ -214,7 +214,7 @@ int main() {
 
 Explicitly specify validity scope of references to prevent dangling references.
 
-#### Tough C 实现 / Implementation in Tough C
+#### Rust C/C++ 实现 / Implementation in Rust C/C++
 
 ```cpp
 // TCC-LIFE-005: Lifetime binding analysis
@@ -257,7 +257,7 @@ StringView create_view_good(const std::string& source) {
 
 Provide mutability within immutable context while maintaining safety.
 
-#### Tough C 实现 / Implementation in Tough C
+#### Rust C/C++ 实现 / Implementation in Rust C/C++
 
 ```cpp
 // TCC-MUT-001: Interior mutability pattern
@@ -308,7 +308,7 @@ public:
 
 Statically mark whether types can be safely transferred or shared between threads.
 
-#### Tough C 实现 / Implementation in Tough C
+#### Rust C/C++ 实现 / Implementation in Rust C/C++
 
 ```cpp
 // TCC-SYNC-001: Thread safety annotations
@@ -536,5 +536,6 @@ void RuleEngine::registerAllRules() {
 
 ---
 
-**Tough C = C++ 的表达力 + Rust 的安全性**
-**Tough C = C++ Expressiveness + Rust Safety**
+**Rust C/C++ = C++ 的表达力 + Rust 的安全性**
+**Rust C/C++ = C++ Expressiveness + Rust Safety**
+

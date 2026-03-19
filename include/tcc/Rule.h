@@ -1,8 +1,8 @@
-﻿// Tough C Profiler - Rule System
-// Tough C 分析器 - 规则系统
+// Rust C/C++ Profiler - Rule System
+// Rust C/C++ 分析器 - 规则系统
 //
-// Base classes and interfaces for TCC safety rules
-// TCC 安全规则的基类和接口
+// Base classes and interfaces for RCC safety rules
+// RCC 安全规则的基类和接口
 
 #pragma once
 
@@ -16,7 +16,7 @@
 
 namespace tcc {
 
-// Base class for all TCC rules / 所有 TCC 规则的基类
+// Base class for all RCC rules / 所有 RCC 规则的基类
 class Rule {
 public:
     explicit Rule(std::string id, std::string description, RuleCategory category)
@@ -89,3 +89,4 @@ private:
 };
 
 } // namespace tcc
+

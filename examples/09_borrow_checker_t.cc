@@ -1,5 +1,5 @@
-﻿// Tough C Example - Borrow Checker (Should Pass)
-// Tough C 示例 - 借用检查器（应该通过）
+// Rust C/C++ Example - Borrow Checker (Should Pass)
+// Rust C/C++ 示例 - 借用检查器（应该通过）
 // @tcc
 // Demonstrates: TCC-BORROW-001, TCC-BORROW-002, TCC-BORROW-003
 
@@ -188,3 +188,4 @@ int main() {
     
     return 0;
 }
+

@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Diagnostic Implementation
-// Tough C 分析器 - 诊断实现
+// Rust C/C++ Profiler - Diagnostic Implementation
+// Rust C/C++ 分析器 - 诊断实现
 
 #include "tcc/Diagnostic.h"
 #include <iostream>
@@ -103,3 +103,4 @@ void DiagnosticEngine::clear() {
 }
 
 } // namespace tcc
+

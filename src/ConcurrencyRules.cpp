@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Concurrency Rules Implementation
-// Tough C 分析器 - 并发规则实现
+// Rust C/C++ Profiler - Concurrency Rules Implementation
+// Rust C/C++ 分析器 - 并发规则实现
 
 #include "tcc/ConcurrencyRules.h"
 #include <clang/AST/RecursiveASTVisitor.h>
@@ -160,3 +160,4 @@ void RequireAtomicForSharedCounterRule::check(clang::ASTContext& context, Diagno
 }
 
 } // namespace tcc
+

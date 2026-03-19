@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Borrow Checker Rules
-// Tough C 分析器 - 借用检查规则
+// Rust C/C++ Profiler - Borrow Checker Rules
+// Rust C/C++ 分析器 - 借用检查规则
 //
 // Rules for detecting borrow violations (Rust-style)
 // 用于检测借用违规的规则（Rust 风格）
@@ -103,3 +103,4 @@ public:
 };
 
 } // namespace tcc
+

@@ -1,8 +1,8 @@
-﻿// Tough C Profiler - Main Entry Point
-// Tough C 分析器 - 主入口
+﻿// Rust C/C++ Profiler - Main Entry Point
+// Rust C/C++ 分析器 - 主入口
 //
-// Command-line interface for TCC profiler
-// TCC 分析器的命令行接口
+// Command-line interface for Rust C/C++ profiler
+// Rust C/C++ 分析器的命令行接口
 
 #include "tcc/Core.h"
 #include "tcc/Diagnostic.h"
@@ -23,42 +23,42 @@ using namespace clang::tooling;
 using namespace llvm;
 
 // Command line options / 命令行选项
-static cl::OptionCategory TCCCategory("Tough C Options / Tough C 选项");
+static cl::OptionCategory RCCCategory("Rust C/C++ Options / Rust C/C++ 选项");
 
 static cl::opt<bool> ShowVersion(
     "version",
     cl::desc("Show version information / 显示版本信息"),
-    cl::cat(TCCCategory)
+    cl::cat(RCCCategory)
 );
 
 static cl::opt<bool> Verbose(
     "verbose",
     cl::desc("Enable verbose output / 启用详细输出"),
-    cl::cat(TCCCategory)
+    cl::cat(RCCCategory)
 );
 
 static cl::opt<bool> NoOwnership(
     "no-ownership",
     cl::desc("Disable ownership checks / 禁用所有权检查"),
-    cl::cat(TCCCategory)
+    cl::cat(RCCCategory)
 );
 
 static cl::opt<bool> NoLifetime(
     "no-lifetime",
     cl::desc("Disable lifetime checks / 禁用生命周期检查"),
-    cl::cat(TCCCategory)
+    cl::cat(RCCCategory)
 );
 
 static cl::opt<bool> NoConcurrency(
     "no-concurrency",
     cl::desc("Disable concurrency checks / 禁用并发检查"),
-    cl::cat(TCCCategory)
+    cl::cat(RCCCategory)
 );
 
 // Custom AST Consumer / 自定义 AST 消费者
-class TCCASTConsumer : public ASTConsumer {
+class RCCASTConsumer : public ASTConsumer {
 public:
-    explicit TCCASTConsumer(RuleEngine& engine, DiagnosticEngine& diags)
+    explicit RCCASTConsumer(RuleEngine& engine, DiagnosticEngine& diags)
         : engine_(engine), diagnostics_(diags) {}
     
     void HandleTranslationUnit(ASTContext& context) override {
@@ -76,9 +76,9 @@ private:
 };
 
 // Custom Frontend Action / 自定义前端动作
-class TCCFrontendAction : public ASTFrontendAction {
+class RCCFrontendAction : public ASTFrontendAction {
 public:
-    explicit TCCFrontendAction(RuleEngine& engine, DiagnosticEngine& diags)
+    explicit RCCFrontendAction(RuleEngine& engine, DiagnosticEngine& diags)
         : engine_(engine), diagnostics_(diags) {}
     
     std::unique_ptr<ASTConsumer> CreateASTConsumer(
@@ -89,7 +89,7 @@ public:
             llvm::outs() << "处理文件: " << InFile.str() << "\n";
         }
         
-        return std::make_unique<TCCASTConsumer>(engine_, diagnostics_);
+        return std::make_unique<RCCASTConsumer>(engine_, diagnostics_);
     }
 
 private:
@@ -98,13 +98,13 @@ private:
 };
 
 // Frontend Action Factory / 前端动作工厂
-class TCCActionFactory : public FrontendActionFactory {
+class RCCActionFactory : public FrontendActionFactory {
 public:
-    explicit TCCActionFactory(RuleEngine& engine, DiagnosticEngine& diags)
+    explicit RCCActionFactory(RuleEngine& engine, DiagnosticEngine& diags)
         : engine_(engine), diagnostics_(diags) {}
     
     std::unique_ptr<FrontendAction> create() override {
-        return std::make_unique<TCCFrontendAction>(engine_, diagnostics_);
+        return std::make_unique<RCCFrontendAction>(engine_, diagnostics_);
     }
 
 private:
@@ -115,8 +115,8 @@ private:
 // Print banner / 打印横幅
 void printBanner() {
     llvm::outs() << "╔════════════════════════════════════════════════════════════╗\n";
-    llvm::outs() << "║  Tough C Profiler - Pre-compilation Safety Analyzer       ║\n";
-    llvm::outs() << "║  Tough C 分析器 - 预编译安全分析工具                       ║\n";
+    llvm::outs() << "║  Rust C/C++ Profiler - Pre-compilation Safety Analyzer      ║\n";
+    llvm::outs() << "║  Rust C/C++ 分析器 - 预编译安全分析工具                      ║\n";
     llvm::outs() << "║  Version / 版本: " << VERSION << "                                   ║\n";
     llvm::outs() << "╚════════════════════════════════════════════════════════════╝\n\n";
 }
@@ -125,10 +125,10 @@ void printBanner() {
 int main(int argc, const char** argv) {
     // Parse command line / 解析命令行
     auto ExpectedParser = CommonOptionsParser::create(
-        argc, argv, TCCCategory,
+        argc, argv, RCCCategory,
         cl::Optional,
-        "Tough C Profiler - enforces safety rules on C/C++ code\n"
-        "Tough C 分析器 - 对 C/C++ 代码强制执行安全规则"
+        "Rust C/C++ Profiler - enforces safety rules on C/C++ code\n"
+        "Rust C/C++ 分析器 - 对 C/C++ 代码强制执行安全规则"
     );
     
     if (!ExpectedParser) {
@@ -187,18 +187,18 @@ int main(int argc, const char** argv) {
     ClangTool Tool(OptionsParser.getCompilations(),
                    OptionsParser.getSourcePathList());
     
-    TCCActionFactory actionFactory(engine, diagnostics);
+    RCCActionFactory actionFactory(engine, diagnostics);
     int result = Tool.run(&actionFactory);
     
     // Print diagnostics / 打印诊断
     if (diagnostics.getDiagnostics().empty()) {
-        llvm::outs() << "\n✓ All checks passed! Code is TCC-compliant.\n";
-        llvm::outs() << "✓ 所有检查通过！代码符合 TCC 规范。\n";
+        llvm::outs() << "\n✓ All checks passed! Code is RCC-compliant.\n";
+        llvm::outs() << "✓ 所有检查通过！代码符合 RCC 规范。\n";
         return static_cast<int>(ExitCode::Success);
     }
     
-    llvm::errs() << "\n✗ TCC rule violations found:\n";
-    llvm::errs() << "✗ 发现 TCC 规则违规:\n\n";
+    llvm::errs() << "\n✗ RCC rule violations found:\n";
+    llvm::errs() << "✗ 发现 RCC 规则违规:\n\n";
     diagnostics.printAll(llvm::errs());
     
     if (diagnostics.hasErrors()) {
@@ -209,3 +209,4 @@ int main(int argc, const char** argv) {
     
     return static_cast<int>(ExitCode::Success);
 }
+

@@ -1,5 +1,5 @@
-﻿// Tough C Example - Move Semantic Violations (Should Fail)
-// Tough C 示例 - 移动语义违规（应该失败）
+// Rust C/C++ Example - Move Semantic Violations (Should Fail)
+// Rust C/C++ 示例 - 移动语义违规（应该失败）
 // @tcc
 // Violations: TCC-OWN-005, TCC-OWN-006
 
@@ -123,3 +123,4 @@ int main() {
     
     return 0;
 }
+

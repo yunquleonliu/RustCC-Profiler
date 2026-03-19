@@ -1,5 +1,5 @@
-﻿// TCC Test: Use-after-move violation (should fail)
-// TCC 测试：移动后使用违规（应失败）
+// RCC Test: Use-after-move violation (should fail)
+// RCC 测试：移动后使用违规（应失败）
 // @tcc
 // Violation: TCC-OWN-005
 

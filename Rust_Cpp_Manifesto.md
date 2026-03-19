@@ -1,4 +1,4 @@
-﻿# **Tough C Design Rationale and Manifesto**
+# **Rust C/C++ Design Rationale and Manifesto**
 
 ###  * C++ Federation Never Fails Programmer*
 
@@ -58,15 +58,15 @@ This promise creates *engineering psychological safety*. That is much more valua
 
 That is why C++ survives.
 
-###   4. What TCC Really Is
+###   4. What RCC Really Is
 
-Tough C does **not** weaken this promise. TCC extends it.
+Rust C/C++ does **not** weaken this promise. RCC extends it.
 
-TCC does **not** say:
+RCC does **not** say:
 
 > “You cannot do unsafe things.”
 
-TCC says:
+RCC says:
 
 > **“If you don’t need unsafe power yet, don’t pay its cost.”**
 
@@ -74,7 +74,7 @@ This distinction is everything.
 
 ###   5. Safety Must Be Reversible
 
-In TCC:
+In RCC:
 
 - Safety is **opt-in**
 
@@ -82,9 +82,9 @@ In TCC:
 
 - Escape hatches always exist
 
-If TCC rules become too restrictive:
+If RCC rules become too restrictive:
 
-- Move the file out of TCC
+- Move the file out of RCC
 
 - Drop to raw C++
 
@@ -94,7 +94,7 @@ No capability is lost.  It is only *delayed* until truly needed.
 
 This is something Rust cannot offer.
 
-###   6. TCC Is Designed for the AI Era
+###   6. RCC Is Designed for the AI Era
 
 In an age where:
 
@@ -106,11 +106,11 @@ In an age where:
 
 The problem is no longer *how code is written*,    but **whether code is allowed to exist**.
 
-TCC answers that question.
+RCC answers that question.
 
-###   7. What TCC Guarantees
+###   7. What RCC Guarantees
 
-> **TCC preserves the C++ federation promise.**
+> **RCC preserves the C++ federation promise.**
 
 - Performance issues? There is a way out.
 
@@ -118,17 +118,17 @@ TCC answers that question.
 
 - Hardware constraints? There is a way out.
 
-C++ always covers your back. Tough C simply asks one question before you enter danger:
+C++ always covers your back. Rust C/C++ simply asks one question before you enter danger:
 
 > **“Do you really need this now?”**
 
 ###    8. Final Statement
 
-> **TCC does not reduce what C/C++ can do. It only postpones when you must do it.**
+> **RCC does not reduce what C/C++ can do. It only postpones when you must do it.**
 
 This is not restriction. This is engineering maturity.
 
-##    中文版本（TCC 设计宣言）
+##    中文版本（RCC 设计宣言）
 
 ###  1. 少有人讨论的问题
 
@@ -186,11 +186,11 @@ C++ 不是一门语言，而是一个**能力联邦**：
 
 这是工程中的“心理安全感”。
 
-###   4. TCC 到底是什么
+###   4. RCC 到底是什么
 
-TCC **不是**削弱这个承诺，而是**延续它**。
+RCC **不是**削弱这个承诺，而是**延续它**。
 
-TCC 不是在说：
+RCC 不是在说：
 > “你不能写危险代码”
 
 而是在说：
@@ -200,7 +200,7 @@ TCC 不是在说：
 
 ###   5. 安全必须是可撤销的
 
-在 TCC 中：
+在 RCC 中：
 
 - 安全是 **可选择的**
 
@@ -208,9 +208,9 @@ TCC 不是在说：
 
 - 后门始终存在
 
-如果 TCC 约束太多了：
+如果 RCC 约束太多了：
 
-- 把文件移出 TCC
+- 把文件移出 RCC
 
 - 回到普通 C++
 
@@ -218,7 +218,7 @@ TCC 不是在说：
 
 能力永远在那里。你只是**暂时不用它**。
 
-###   6. TCC 是为 AI 时代设计的
+###   6. RCC 是为 AI 时代设计的
 
 当：
 
@@ -232,11 +232,11 @@ TCC 不是在说：
 
 > **这段代码是否应该被允许存在？**
 
-TCC 就是这个回答。
+RCC 就是这个回答。
 
-###   7. TCC 的最终承诺
+###   7. RCC 的最终承诺
 
-> **TCC 继承并强化了 C++ federation 的承诺。**
+> **RCC 继承并强化了 C++ federation 的承诺。**
 
 - 性能不够？有路
 - 功能不够？有路
@@ -245,12 +245,12 @@ TCC 就是这个回答。
 
 **C++ 永远给你兜底。**
 
-TCC 只是多问一句：
+RCC 只是多问一句：
 
 > **“你真的现在就需要下地狱吗？”**
 
 ###    8. 终极宣言
 
-> **TCC 不减少 C/C++ 的能力，它只延后你必须使用它们的时间。**
+> **RCC 不减少 C/C++ 的能力，它只延后你必须使用它们的时间。**
 
 这不是限制，这是成熟工程的标志。

@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - File Detector Implementation
-// Tough C 分析器 - 文件检测器实现
+// Rust C/C++ Profiler - File Detector Implementation
+// Rust C/C++ 分析器 - 文件检测器实现
 
 #include "tcc/FileDetector.h"
 #include <fstream>
@@ -13,11 +13,11 @@ bool FileDetector::shouldAnalyze(const std::string& filename) {
 }
 
 bool FileDetector::hasTCCExtension(const std::string& filename) {
-    // Check for .tcc extension / 检查 .tcc 扩展名
-    if (filename.length() >= 4) {
-        std::string ext = filename.substr(filename.length() - 4);
+    // Check for _t.cc extension / 检查 _t.cc 扩展名
+    if (filename.length() >= 5) {
+        std::string ext = filename.substr(filename.length() - 5);
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-        return ext == ".tcc";
+        return ext == "_t.cc";
     }
     return false;
 }
@@ -82,3 +82,4 @@ TCCConfig FileDetector::parseAnnotation(const std::string& content) {
 }
 
 } // namespace tcc
+

@@ -1,5 +1,5 @@
-﻿// Tough C Example - Borrow Violations (Should Fail)
-// Tough C 示例 - 借用违规（应该失败）
+// Rust C/C++ Example - Borrow Violations (Should Fail)
+// Rust C/C++ 示例 - 借用违规（应该失败）
 // @tcc
 // Violations: TCC-BORROW-001, TCC-BORROW-002, TCC-BORROW-003, TCC-BORROW-004
 
@@ -158,3 +158,4 @@ int main() {
     
     return 0;
 }
+

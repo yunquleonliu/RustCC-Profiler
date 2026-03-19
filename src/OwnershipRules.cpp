@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Ownership Rules Implementation
-// Tough C 分析器 - 所有权规则实现
+// Rust C/C++ Profiler - Ownership Rules Implementation
+// Rust C/C++ 分析器 - 所有权规则实现
 
 #include "tcc/OwnershipRules.h"
 #include "tcc/ASTVisitor.h"
@@ -87,8 +87,8 @@ void ForbidNewRule::checkNewExpr(clang::CXXNewExpr* expr,
     // Create diagnostic / 创建诊断
     Diagnostic diag(
         Severity::Error,
-        "Use of 'new' operator is forbidden in TCC code / "
-        "TCC 代码中禁止使用 'new' 操作符",
+        "Use of 'new' operator is forbidden in RCC code / "
+        "RCC 代码中禁止使用 'new' 操作符",
         srcLoc,
         RuleCategory::Ownership,
         getId()
@@ -105,8 +105,8 @@ void ForbidNewRule::checkNewExpr(clang::CXXNewExpr* expr,
     // Add escape paths / 添加逃生路径
     diag.addEscapePath("Remove @tcc annotation to use raw C++ / "
                       "移除 @tcc 注解以使用原始 C++");
-    diag.addEscapePath("Move this code to a non-TCC file / "
-                      "将此代码移至非 TCC 文件");
+    diag.addEscapePath("Move this code to a non-RCC file / "
+                      "将此代码移至非 RCC 文件");
     
     diagnostics.report(std::move(diag));
 }
@@ -138,8 +138,8 @@ void ForbidDeleteRule::checkDeleteExpr(clang::CXXDeleteExpr* expr,
     // Create diagnostic / 创建诊断
     Diagnostic diag(
         Severity::Error,
-        "Use of 'delete' operator is forbidden in TCC code / "
-        "TCC 代码中禁止使用 'delete' 操作符",
+        "Use of 'delete' operator is forbidden in RCC code / "
+        "RCC 代码中禁止使用 'delete' 操作符",
         srcLoc,
         RuleCategory::Ownership,
         getId()
@@ -154,8 +154,8 @@ void ForbidDeleteRule::checkDeleteExpr(clang::CXXDeleteExpr* expr,
     // Add escape paths / 添加逃生路径
     diag.addEscapePath("Remove @tcc annotation to use raw C++ / "
                       "移除 @tcc 注解以使用原始 C++");
-    diag.addEscapePath("Move this code to a non-TCC file / "
-                      "将此代码移至非 TCC 文件");
+    diag.addEscapePath("Move this code to a non-RCC file / "
+                      "将此代码移至非 RCC 文件");
     
     diagnostics.report(std::move(diag));
 }
@@ -210,8 +210,8 @@ private:
         
         Diagnostic diag(
             Severity::Error,
-            "Use of '" + funcName + "' is forbidden in TCC code / "
-            "TCC 代码中禁止使用 '" + funcName + "'",
+            "Use of '" + funcName + "' is forbidden in RCC code / "
+            "RCC 代码中禁止使用 '" + funcName + "'",
             srcLoc,
             RuleCategory::Ownership,
             "TCC-OWN-003"
@@ -234,8 +234,8 @@ private:
         // Escape paths / 逃生路径
         diag.addEscapePath("Remove @tcc annotation to use raw C / "
                           "移除 @tcc 注解以使用原始 C");
-        diag.addEscapePath("Move this code to a non-TCC file / "
-                          "将此代码移至非 TCC 文件");
+        diag.addEscapePath("Move this code to a non-RCC file / "
+                          "将此代码移至非 RCC 文件");
         
         diagnostics_.report(std::move(diag));
     }
@@ -354,3 +354,4 @@ bool RawOwningPointerRule::isOwningPointerReturn(clang::FunctionDecl* decl) cons
 }
 
 } // namespace tcc
+

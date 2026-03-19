@@ -1,5 +1,5 @@
-﻿// Tough C Example - Thread Safety (Should Pass)
-// Tough C 示例 - 线程安全（应该通过）
+// Rust C/C++ Example - Thread Safety (Should Pass)
+// Rust C/C++ 示例 - 线程安全（应该通过）
 // @tcc
 
 #include <memory>
@@ -69,3 +69,4 @@ int main() {
     
     return 0;
 }
+

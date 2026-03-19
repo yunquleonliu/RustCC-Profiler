@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Diagnostic Helper Utilities
-// Tough C 分析器 - 诊断辅助工具
+// Rust C/C++ Profiler - Diagnostic Helper Utilities
+// Rust C/C++ 分析器 - 诊断辅助工具
 //
 // Convenience helpers for reporting diagnostics from inner AST visitors
 // that hold a clang::ASTContext reference but need to emit tcc::Diagnostic.
@@ -16,8 +16,8 @@
 
 namespace tcc {
 
-/// Convert a Clang SourceLocation to a TCC SourceLocation.
-/// 将 Clang SourceLocation 转换为 TCC SourceLocation。
+/// Convert a Clang SourceLocation to a RCC SourceLocation.
+/// 将 Clang SourceLocation 转换为 RCC SourceLocation。
 inline SourceLocation makeSourceLoc(clang::SourceLocation loc,
                                     const clang::SourceManager& sm) {
     if (loc.isInvalid()) return {};
@@ -39,3 +39,4 @@ inline void emitDiag(DiagnosticEngine& diags,
 }
 
 } // namespace tcc
+

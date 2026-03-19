@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Diagnostic System
-// Tough C 分析器 - 诊断系统
+// Rust C/C++ Profiler - Diagnostic System
+// Rust C/C++ 分析器 - 诊断系统
 //
 // System for collecting and reporting rule violations
 // 用于收集和报告规则违规的系统
@@ -88,3 +88,4 @@ private:
 };
 
 } // namespace tcc
+

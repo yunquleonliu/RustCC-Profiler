@@ -1,8 +1,8 @@
-﻿// Tough C Profiler - File Detection
-// Tough C 分析器 - 文件检测
+// Rust C/C++ Profiler - File Detection
+// Rust C/C++ 分析器 - 文件检测
 //
-// Detects if a file should be analyzed by TCC
-// 检测文件是否应该被 TCC 分析
+// Detects if a file should be analyzed by RCC
+// 检测文件是否应该被 RCC 分析
 
 #pragma once
 
@@ -11,9 +11,9 @@
 
 namespace tcc {
 
-// TCC configuration from file / 从文件读取的 TCC 配置
+// RCC configuration from file / 从文件读取的 RCC 配置
 struct TCCConfig {
-    bool enabled = false;           // Is TCC enabled / TCC 是否启用
+    bool enabled = false;           // Is RCC enabled / RCC 是否启用
     bool ownershipChecks = true;    // Check ownership rules / 检查所有权规则
     bool lifetimeChecks = true;     // Check lifetime rules / 检查生命周期规则
     bool concurrencyChecks = true;  // Check concurrency rules / 检查并发规则
@@ -23,11 +23,11 @@ struct TCCConfig {
 class FileDetector {
 public:
     // Check if file should be analyzed / 检查文件是否应该被分析
-    // Method 1: .tcc extension / 方法1：.tcc 扩展名
+    // Method 1: _t.cc extension / 方法1：_t.cc 扩展名
     // Method 2: // @tcc annotation in file / 方法2：文件中的 // @tcc 注解
     static bool shouldAnalyze(const std::string& filename);
     
-    // Parse TCC configuration from file / 从文件解析 TCC 配置
+    // Parse RCC configuration from file / 从文件解析 RCC 配置
     static std::optional<TCCConfig> parseConfig(const std::string& filename);
     
 private:
@@ -42,3 +42,4 @@ private:
 };
 
 } // namespace tcc
+

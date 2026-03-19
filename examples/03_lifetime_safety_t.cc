@@ -1,5 +1,5 @@
-﻿// Tough C Example - Lifetime Safety (Should Pass)
-// Tough C 示例 - 生命周期安全（应该通过）
+// Rust C/C++ Example - Lifetime Safety (Should Pass)
+// Rust C/C++ 示例 - 生命周期安全（应该通过）
 // @tcc
 
 #include <memory>
@@ -45,3 +45,4 @@ int main() {
     
     return 0;
 }
+

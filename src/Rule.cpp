@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Rule Implementation
-// Tough C 分析器 - 规则实现
+// Rust C/C++ Profiler - Rule Implementation
+// Rust C/C++ 分析器 - 规则实现
 
 #include "tcc/Rule.h"
 #include <algorithm>
@@ -26,3 +26,4 @@ std::vector<Rule*> RuleRegistry::getRulesByCategory(RuleCategory category) const
 }
 
 } // namespace tcc
+

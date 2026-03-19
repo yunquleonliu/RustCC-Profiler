@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Safety Pattern Rules
-// Tough C 分析器 - 安全模式规则
+// Rust C/C++ Profiler - Safety Pattern Rules
+// Rust C/C++ 分析器 - 安全模式规则
 //
 // Rules for enforcing Rust-style safety patterns (Option, Result, etc.)
 // 用于强制执行 Rust 风格安全模式的规则（Option、Result 等）
@@ -138,3 +138,4 @@ public:
 };
 
 } // namespace tcc
+

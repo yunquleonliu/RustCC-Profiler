@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Lifetime Rules Implementation
-// Tough C 分析器 - 生命周期规则实现
+// Rust C/C++ Profiler - Lifetime Rules Implementation
+// Rust C/C++ 分析器 - 生命周期规则实现
 
 #include "tcc/LifetimeRules.h"
 #include <clang/AST/RecursiveASTVisitor.h>
@@ -399,3 +399,4 @@ void ForbidUntrackedRefMemberRule::check(clang::ASTContext& context, DiagnosticE
 }
 
 } // namespace tcc
+

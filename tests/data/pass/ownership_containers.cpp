@@ -1,4 +1,4 @@
-﻿// Test file for correct container usage
+// Test file for correct container usage
 // 正确容器使用测试文件
 // @tcc
 
@@ -41,7 +41,7 @@ std::unique_ptr<Data> createData(int value) {
 int main() {
     // All memory management is automatic / 所有内存管理都是自动的
     auto intArray = createIntArray(100);
-    auto str = createString("Hello TCC");
+    auto str = createString("Hello RCC");
     auto dataList = createDataList(10);
     auto data = createData(42);
     

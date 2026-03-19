@@ -1,4 +1,4 @@
-# Tough C：所有权与生命周期增强规范 (Draft v1.0)
+# Rust C/C++：所有权与生命周期增强规范 (Draft v1.0)
 
 > Note / 说明:
 > This document describes design semantics and direction.
@@ -11,7 +11,7 @@
 
 我们不增加新关键字，而是通过 Profiler 对现有 C/C++ 语法进行严格约束：
 
-| **现有语法** | **标准 C++ 语义** | **Tough C 增强语义 (Profiler 强制)** |
+| **现有语法** | **标准 C++ 语义** | **Rust C/C++ 增强语义 (Profiler 强制)** |
 | --- | --- | --- |
 | `T*` | 裸指针，无所有权概念 | **Borrowed (可变借用)**。受生命周期检查。 |
 | `const T*` | 常量指针 | **Shared Ref (只读借用)**。禁止任何修改。 |
@@ -37,7 +37,7 @@ Profiler 将对代码进行静态着色分析，强制执行以下规则：
 工程师编写看起来像标准 C++ 的代码，但 Profiler 进行深度静态分析。
 C++
 ```
-// Tough C 源码 (工程师视角)
+// Rust C/C++ 源码 (工程师视角)
 
 void
 
@@ -85,7 +85,7 @@ std
 
 - 自动插入 `restrict` 关键字协助编译器进行指令重排。
 
-## 4. 整合进 Tough C 项目的路线图
+## 4. 整合进 Rust C/C++ 项目的路线图
 
 ### 第一步：定义宏约束 (The Guard)
 
@@ -134,7 +134,7 @@ g++ ./src/main.cpp -o app
 
 1. **确定 Minimal Viable Semantics (MVS)：** 我们先只针对“指针移动 (Move)”和“空指针 (Null)”进行 Profiler 开发。
 
-2. **编写一些 Tough C 实例：** 建议用 常见的 嵌入系统Embedded C ，常用的C++_ 算法的常见内存管理任务做试点。
+2. **编写一些 Rust C/C++ 实例：** 建议用 常见的 嵌入系统Embedded C ，常用的C++_ 算法的常见内存管理任务做试点。
 
 3. **集成 Valgrind/ASan：** 作为 Profiler 的动态验证补充，确保静态逻辑的正确性。
 

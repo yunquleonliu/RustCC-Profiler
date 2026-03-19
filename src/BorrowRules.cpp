@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Borrow Checker Rules Implementation
-// Tough C 分析器 - 借用检查规则实现
+// Rust C/C++ Profiler - Borrow Checker Rules Implementation
+// Rust C/C++ 分析器 - 借用检查规则实现
 
 #include "tcc/BorrowRules.h"
 #include "tcc/DiagnosticHelper.h"
@@ -198,3 +198,4 @@ bool BorrowDuringModificationRule::isBorrowedAndModified(
 }
 
 } // namespace tcc
+

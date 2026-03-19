@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - AST Visitor Implementation
-// Tough C 分析器 - AST 访问者实现
+// Rust C/C++ Profiler - AST Visitor Implementation
+// Rust C/C++ 分析器 - AST 访问者实现
 
 #include "tcc/ASTVisitor.h"
 #include "tcc/DiagnosticHelper.h"
@@ -245,3 +245,4 @@ bool TCCASTVisitor::VisitCXXOperatorCallExpr(clang::CXXOperatorCallExpr* expr) {
 }
 
 } // namespace tcc
+

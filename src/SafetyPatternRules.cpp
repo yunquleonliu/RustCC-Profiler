@@ -1,5 +1,5 @@
-﻿// Tough C Profiler - Safety Pattern Rules Implementation
-// Tough C 分析器 - 安全模式规则实现
+// Rust C/C++ Profiler - Safety Pattern Rules Implementation
+// Rust C/C++ 分析器 - 安全模式规则实现
 
 #include "tcc/SafetyPatternRules.h"
 #include "tcc/DiagnosticHelper.h"
@@ -357,3 +357,4 @@ bool EnforceBoundsCheckRule::shouldUseAtMethod(
 }
 
 } // namespace tcc
+

@@ -1,5 +1,5 @@
-﻿// Tough C Example - Option/Result Violations (Should Fail)
-// Tough C 示例 - Option/Result 违规（应该失败）
+// Rust C/C++ Example - Option/Result Violations (Should Fail)
+// Rust C/C++ 示例 - Option/Result 违规（应该失败）
 // @tcc
 // Violations: TCC-OPTION-001, TCC-RESULT-001, TCC-PANIC-001, TCC-SAFE-001
 
@@ -238,3 +238,4 @@ int main() {
     
     return 0;
 }
+

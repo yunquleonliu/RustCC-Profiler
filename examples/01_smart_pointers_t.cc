@@ -1,11 +1,11 @@
-﻿// Tough C Example - Smart Pointer Usage (Should Pass)
-// Tough C 示例 - 智能指针使用（应该通过）
+// Rust C/C++ Example - Smart Pointer Usage (Should Pass)
+// Rust C/C++ 示例 - 智能指针使用（应该通过）
 // @tcc
 
 #include <memory>
 #include <vector>
 
-// Example of TCC-compliant code / TCC 合规代码示例
+// Example of RCC-compliant code / RCC 合规代码示例
 // This file uses smart pointers and avoids raw ownership
 // 此文件使用智能指针并避免原始所有权
 
@@ -47,3 +47,4 @@ int main() {
     // RAII handles cleanup / RAII 处理清理
     return 0;
 }
+

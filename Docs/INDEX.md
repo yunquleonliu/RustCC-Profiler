@@ -1,8 +1,8 @@
-﻿# Tough C Documentation Index
-# Tough C 文档索引
+# Rust C/C++ Documentation Index
+# Rust C/C++ 文档索引
 
-这是 Tough C (Rust C) Profiler 项目的完整文档索引。
-This is the complete documentation index for the Tough C (Rust C) Profiler project.
+这是 Rust C/C++ (Rust C) Profiler 项目的完整文档索引。
+This is the complete documentation index for the Rust C/C++ (Rust C) Profiler project.
 
 ---
 
@@ -14,7 +14,7 @@ This is the complete documentation index for the Tough C (Rust C) Profiler proje
 - Safety is opt-in, power is never removed
 - 设计为 AI 时代准备 / Designed for the AI era
 
-### 2. [tough C .md](tough%20C%20.md)
+### 2. [rust_c_cpp_spec.md](rust_c_cpp_spec.md)
 **核心规范 / Core Specification**
 - 所有权与生命周期增强规范 / Ownership and lifetime enhancement specification
 - 语义升级而非新语法 / Semantic upgrade without new keywords
@@ -34,11 +34,11 @@ This is the complete documentation index for the Tough C (Rust C) Profiler proje
 - 实现策略和规则清单 / Implementation strategy and rule list
 - 集成示例代码 / Integration examples
 
-### 4. [Tough C Menifesto.md](../Tough%20C%20Menifesto.md)
+### 4. [Rust C/C++ Manifesto.md](../Rust_Cpp_Manifesto.md)
 **设计理念 / Design Rationale**
 - C++ Federation 承诺 / C++ Federation promise
 - 为什么早期限制会失败 / Why early restrictions fail
-- TCC 的真正价值 / The real value of TCC
+- RCC 的真正价值 / The real value of RCC
 - 可逆安全性 / Reversible safety
 
 ### 5. [vision.md](vision.md)
@@ -104,42 +104,42 @@ All examples are in the `examples/` directory, categorized as **Pass** and **Fai
 
 ### ✅ 正确示例 (应该通过检查) / Correct Examples (Should Pass)
 
-#### [01_smart_pointers.tcc](../examples/01_smart_pointers.tcc)
+#### [01_smart_pointers_t.cc](../examples/01_smart_pointers_t.cc)
 **智能指针使用 / Smart Pointer Usage**
 - std::unique_ptr<T> 唯一所有权 / Unique ownership
 - std::shared_ptr<T> 共享所有权 / Shared ownership
 - RAII 自动清理 / RAII automatic cleanup
 - **Rules**: TCC-OWN-001~004
 
-#### [03_lifetime_safety.tcc](../examples/03_lifetime_safety.tcc)
+#### [03_lifetime_safety_t.cc](../examples/03_lifetime_safety_t.cc)
 **生命周期安全 / Lifetime Safety**
 - 按值返回 / Return by value (RVO)
 - const 引用安全 / Safe const references
 - 容器值语义 / Container value semantics
 - **Rules**: TCC-LIFE-001~004
 
-#### [05_thread_safety.tcc](../examples/05_thread_safety.tcc)
+#### [05_thread_safety_t.cc](../examples/05_thread_safety_t.cc)
 **线程安全 / Thread Safety**
 - std::mutex 保护共享状态 / Mutex-protected shared state
 - std::atomic 原子操作 / Atomic operations
 - 线程安全模式 / Thread-safe patterns
 - **Rules**: TCC-CONC-001~004
 
-#### [07_move_semantics.tcc](../examples/07_move_semantics.tcc) ⭐ 新增 / New
+#### [07_move_semantics_t.cc](../examples/07_move_semantics_t.cc) ⭐ 新增 / New
 **移动语义 (Rust 风格) / Move Semantics (Rust-style)**
 - 移动构造和移动赋值 / Move constructor and assignment
 - 所有权转移 / Ownership transfer
 - 只移动类型 / Move-only types
 - **Rules**: TCC-OWN-005~007
 
-#### [09_borrow_checker.tcc](../examples/09_borrow_checker.tcc) ⭐ 新增 / New
+#### [09_borrow_checker_t.cc](../examples/09_borrow_checker_t.cc) ⭐ 新增 / New
 **借用检查器 / Borrow Checker**
 - 多个不可变借用 / Multiple immutable borrows
 - 单个可变借用 / Single mutable borrow
 - 顺序借用模式 / Sequential borrow patterns
 - **Rules**: TCC-BORROW-001~004
 
-#### [11_option_result_patterns.tcc](../examples/11_option_result_patterns.tcc) ⭐ 新增 / New
+#### [11_option_result_patterns_t.cc](../examples/11_option_result_patterns_t.cc) ⭐ 新增 / New
 **Option 和 Result 模式 / Option and Result Patterns**
 - std::optional<T> 显式空值处理 / Explicit null handling
 - std::variant<T, E> 错误处理 / Error handling
@@ -151,35 +151,35 @@ All examples are in the `examples/` directory, categorized as **Pass** and **Fai
 
 ### ❌ 违规示例 (应该失败检查) / Violation Examples (Should Fail)
 
-#### [02_raw_pointer_violations.tcc](../examples/02_raw_pointer_violations.tcc)
+#### [02_raw_pointer_violations_t.cc](../examples/02_raw_pointer_violations_t.cc)
 **原始指针违规 / Raw Pointer Violations**
 - ✗ 使用 new/delete / Using new/delete
 - ✗ 使用 malloc/free / Using malloc/free
 - ✗ 原始所有权指针 / Raw owning pointers
 - **Violations**: TCC-OWN-001~004
 
-#### [04_lifetime_violations.tcc](../examples/04_lifetime_violations.tcc)
+#### [04_lifetime_violations_t.cc](../examples/04_lifetime_violations_t.cc)
 **生命周期违规 / Lifetime Violations**
 - ✗ 返回局部变量引用 / Returning reference to local
 - ✗ 悬空指针 / Dangling pointers
 - ✗ 容器存储原始指针 / Containers with raw pointers
 - **Violations**: TCC-LIFE-001~004
 
-#### [06_thread_violations.tcc](../examples/06_thread_violations.tcc)
+#### [06_thread_violations_t.cc](../examples/06_thread_violations_t.cc)
 **并发违规 / Concurrency Violations**
 - ✗ 无保护的共享状态 / Unprotected shared state
 - ✗ 数据竞争 / Data races
 - ✗ 非线程安全类型跨线程使用 / Non-thread-safe types across threads
 - **Violations**: TCC-CONC-001~004
 
-#### [08_move_violations.tcc](../examples/08_move_violations.tcc) ⭐ 新增 / New
+#### [08_move_violations_t.cc](../examples/08_move_violations_t.cc) ⭐ 新增 / New
 **移动语义违规 / Move Semantic Violations**
 - ✗ 移动后使用 / Use after move
 - ✗ 双重移动 / Double move
 - ✗ 传递给函数后使用 / Use after passing to function
 - **Violations**: TCC-OWN-005~006
 
-#### [10_borrow_violations.tcc](../examples/10_borrow_violations.tcc) ⭐ 新增 / New
+#### [10_borrow_violations_t.cc](../examples/10_borrow_violations_t.cc) ⭐ 新增 / New
 **借用违规 / Borrow Violations**
 - ✗ 可变和不可变借用冲突 / Mutable and immutable borrow conflict
 - ✗ 多个可变借用 / Multiple mutable borrows
@@ -187,7 +187,7 @@ All examples are in the `examples/` directory, categorized as **Pass** and **Fai
 - ✗ 借用期间修改 / Modification during borrow
 - **Violations**: TCC-BORROW-001~004
 
-#### [12_safety_violations.tcc](../examples/12_safety_violations.tcc) ⭐ 新增 / New
+#### [12_safety_violations_t.cc](../examples/12_safety_violations_t.cc) ⭐ 新增 / New
 **安全模式违规 / Safety Pattern Violations**
 - ✗ 未检查的 .value() 调用 / Unchecked .value() call
 - ✗ 忽略 Result 返回值 / Ignoring Result return
@@ -247,7 +247,7 @@ All examples are in the `examples/` directory, categorized as **Pass** and **Fai
 ### 1. 阅读核心文档 / Read Core Documentation
 ```
 1. README.md - 了解项目理念 / Understand project philosophy
-2. tough C .md - 学习核心规范 / Learn core specifications
+2. rust_c_cpp_spec.md - 学习核心规范 / Learn core specifications
 3. rust_abstractions.md - 理解 Rust 抽象 / Understand Rust abstractions
 ```
 
@@ -310,7 +310,8 @@ Contributions welcome! Please see:
 
 ---
 
-**Tough C = C++ 的表达力 + Rust 的安全性**
-**Tough C = C++ Expressiveness + Rust Safety**
+**Rust C/C++ = C++ 的表达力 + Rust 的安全性**
+**Rust C/C++ = C++ Expressiveness + Rust Safety**
 
 > Safety is opt-in. Power is never removed. Escape hatches always exist.
+
