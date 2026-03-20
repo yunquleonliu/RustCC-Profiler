@@ -75,24 +75,36 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - Real-project onboarding path
 - Make integration strategy
 
+### 9. [ci_cd_quickstart.md](ci_cd_quickstart.md)
+**CI/CD 快速落地 / CI/CD Quickstart**
+- Most smooth low-friction adoption path
+- Changed-files-first gate strategy
+- Linux runner reference workflow
+
+### 10. [end_to_end.md](end_to_end.md)
+**端到端完整指南 / End-to-End Guide**
+- One complete path from setup to CI gate
+- Practical daily workflow and adoption stages
+- Known limits and realistic usage boundaries
+
 ---
 
 ## 技术文档 / Technical Documentation
 
-### 9. [BUILD.md](../BUILD.md)
+### 11. [BUILD.md](../BUILD.md)
 **构建说明 / Build Instructions**
 - Prerequisites and dependencies
 - Build steps for different platforms
 - 构建前提和依赖项
 - 不同平台的构建步骤
 
-### 10. [BUILDING_ON_WINDOWS.md](../BUILDING_ON_WINDOWS.md)
+### 12. [BUILDING_ON_WINDOWS.md](../BUILDING_ON_WINDOWS.md)
 **Windows 构建 / Windows Build**
 - Windows-specific build instructions
 - Visual Studio and MSVC setup
 - Windows 特定的构建说明
 
-### 11. [BUILDING_ON_LINUX.md](../BUILDING_ON_LINUX.md)
+### 13. [BUILDING_ON_LINUX.md](../BUILDING_ON_LINUX.md)
 **Linux 构建 / Linux Build**
 - Clean Linux validation workflow
 - Distro package prerequisites
@@ -100,20 +112,20 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - 干净 Linux 验证流程
 - 发行版依赖安装与 LLVM/Clang 路径排查
 
-### 12. [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md)
+### 14. [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md)
 **项目结构 / Project Structure**
 - Directory layout / 目录布局
 - Module organization / 模块组织
 - File descriptions / 文件说明
 
-### 13. [COMPLETE_MVP.md](../COMPLETE_MVP.md)
+### 15. [COMPLETE_MVP.md](../COMPLETE_MVP.md)
 **MVP 里程碑记录 / MVP Milestone Record**
 - Historical milestone summary
 - Refer to Working Track for current status
 - 历史里程碑总结
 - 当前状态请以 Working Track 为准
 
-### 14. [Working Track .md](../Working%20Track%20.md)
+### 16. [Working Track .md](../Working%20Track%20.md)
 **工作追踪 / Work Tracking**
 - Development progress
 - Task tracking

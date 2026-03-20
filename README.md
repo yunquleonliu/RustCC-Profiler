@@ -126,8 +126,10 @@ If you are new to this project, read in this order:
 
 1. [User Guide](Docs/user_guide.md)
 2. [Build on Linux](BUILDING_ON_LINUX.md)
-3. [Integration Plan](Docs/integration_plan.md)
-4. [Keywords and Profiles](Docs/keywords_and_profiles.md)
+3. [CI/CD Quickstart](Docs/ci_cd_quickstart.md)
+4. [Integration Plan](Docs/integration_plan.md)
+5. [Keywords and Profiles](Docs/keywords_and_profiles.md)
+6. [End-to-End Guide](Docs/end_to_end.md)
 
 ---
 
@@ -136,7 +138,9 @@ If you are new to this project, read in this order:
 - [Documentation Index](Docs/INDEX.md) - Complete map of available docs
 - [User Guide](Docs/user_guide.md) - Practical usage of rcc-check
 - [Keywords and Profiles](Docs/keywords_and_profiles.md) - RCC/TCC terms and profile modes
+- [CI/CD Quickstart](Docs/ci_cd_quickstart.md) - Fastest low-friction CI adoption path
 - [Integration Plan](Docs/integration_plan.md) - VS Code, CI, and Make rollout strategy
+- [End-to-End Guide](Docs/end_to_end.md) - One complete path from setup to production usage
 - [rust_c_cpp_spec.md](Docs/rust_c_cpp_spec.md) - Core specification and semantic enhancements
 - [Rust Abstractions](Docs/rust_abstractions.md) - Integrated Rust safety patterns
 - [Vision](Docs/vision.md) - Project philosophy and goals
