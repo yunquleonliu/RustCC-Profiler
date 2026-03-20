@@ -6,6 +6,17 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 
 ---
 
+## 快速导航 / Quick Navigation
+
+### 新用户入口 / New User Entry
+
+1. [User Guide](user_guide.md) - How to actually run rcc-check
+2. [Build on Linux](../BUILDING_ON_LINUX.md) - Current supported build path
+3. [Integration Plan](integration_plan.md) - VS Code, CI, and Make adoption path
+4. [Keywords and Profiles](keywords_and_profiles.md) - RCC/TCC naming and rule prefixes
+
+---
+
 ## 核心文档 / Core Documentation
 
 ### 1. [README.md](../README.md)
@@ -46,24 +57,42 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - Long-term goals and philosophy
 - 长期目标和理念
 
+### 6. [user_guide.md](user_guide.md)
+**用户使用指南 / User Guide**
+- How to run `rcc-check` in real projects
+- Compile database usage and `--` clang-args pattern
+- Exit codes, diagnostics, and current limitations
+
+### 7. [keywords_and_profiles.md](keywords_and_profiles.md)
+**关键词与配置画像 / Keywords and Profiles**
+- RCC/TCC terminology reference
+- Rule prefixes, file markers, escape hatches
+- Real profiles users can run today
+
+### 8. [integration_plan.md](integration_plan.md)
+**集成方案 / Integration Plan**
+- Linux-first VS Code workflow
+- Real-project onboarding path
+- Make integration strategy
+
 ---
 
 ## 技术文档 / Technical Documentation
 
-### 6. [BUILD.md](../BUILD.md)
+### 9. [BUILD.md](../BUILD.md)
 **构建说明 / Build Instructions**
 - Prerequisites and dependencies
 - Build steps for different platforms
 - 构建前提和依赖项
 - 不同平台的构建步骤
 
-### 7. [BUILDING_ON_WINDOWS.md](../BUILDING_ON_WINDOWS.md)
+### 10. [BUILDING_ON_WINDOWS.md](../BUILDING_ON_WINDOWS.md)
 **Windows 构建 / Windows Build**
 - Windows-specific build instructions
 - Visual Studio and MSVC setup
 - Windows 特定的构建说明
 
-### 8. [BUILDING_ON_LINUX.md](../BUILDING_ON_LINUX.md)
+### 11. [BUILDING_ON_LINUX.md](../BUILDING_ON_LINUX.md)
 **Linux 构建 / Linux Build**
 - Clean Linux validation workflow
 - Distro package prerequisites
@@ -71,20 +100,20 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - 干净 Linux 验证流程
 - 发行版依赖安装与 LLVM/Clang 路径排查
 
-### 9. [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md)
+### 12. [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md)
 **项目结构 / Project Structure**
 - Directory layout / 目录布局
 - Module organization / 模块组织
 - File descriptions / 文件说明
 
-### 10. [COMPLETE_MVP.md](../COMPLETE_MVP.md)
+### 13. [COMPLETE_MVP.md](../COMPLETE_MVP.md)
 **MVP 里程碑记录 / MVP Milestone Record**
 - Historical milestone summary
 - Refer to Working Track for current status
 - 历史里程碑总结
 - 当前状态请以 Working Track 为准
 
-### 11. [Working Track .md](../Working%20Track%20.md)
+### 14. [Working Track .md](../Working%20Track%20.md)
 **工作追踪 / Work Tracking**
 - Development progress
 - Task tracking

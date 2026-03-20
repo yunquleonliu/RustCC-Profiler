@@ -75,7 +75,7 @@ Rust C/C++ answers that question.
 
 ---
 
-## What Rust C/C++ Enforces (MVP Scope)
+## What RCC Enforces Today
 
 ### Core Safety Rules
 
@@ -85,7 +85,7 @@ Rust C/C++ answers that question.
 
 ### Rust-Inspired Abstractions
 
-Rust C/C++ integrates validated Rust memory safety abstractions:
+Rust C/C++ integrates Rust-inspired abstractions:
 
 - **Move Semantics** (TCC-OWN-005~007) - Use-after-move detection, ownership transfer tracking
 - **Borrow Checker** (TCC-BORROW-001~004) - Mutable/immutable borrow conflicts, lifetime binding
@@ -93,27 +93,26 @@ Rust C/C++ integrates validated Rust memory safety abstractions:
 - **Result Pattern** (TCC-RESULT-001~002) - Mandatory error handling, no ignored returns
 - **Safety Patterns** (TCC-SAFE-001, TCC-PANIC-001~002) - Bounds checking, no unsafe unwraps
 
-See [Rust Abstractions Documentation](Docs/rust_abstractions.md) for complete details.
+See [Rust Abstractions Documentation](Docs/rust_abstractions.md) for conceptual details.
 
 Rust C/C++ does **not** try to prove programs correct.
 It defines **what is acceptable to write**.
 
 ---
 
-## Project Status
+## Current Status
 
 🚧 **Active Development (Implementation Ahead of Build Verification)**
 
-What is implemented:
-- ✅ Core rule engine with Clang AST integration
-- ✅ Ownership, lifetime, and concurrency rule modules
-- ✅ Rust-inspired extension modules (move / borrow / safety patterns)
-- ✅ Expanded examples and test data
+Validated and stable now:
+- ✅ Linux-first build and test path
+- ✅ Linux-only CI pipeline is green
+- ✅ Core ownership/lifetime/concurrency checks used by tests
+- ✅ Use-after-move checks used by tests
 
-What is still in progress:
-- ⚠ Several newly added rules still contain placeholder analysis logic
-- ⚠ Full build/test verification is pending on clean Linux environment
-- ⚠ Some docs are being reconciled from historical "MVP complete" language
+Still in progress:
+- ⚠ Some declared borrow and safety-pattern rules are partial/placeholder
+- ⚠ File-detector annotations exist but are not yet wired as a hard CLI gate
 
 Recommended validation path:
 - Build and verify on Linux (`BUILDING_ON_LINUX.md`)
@@ -121,8 +120,23 @@ Recommended validation path:
 
 ---
 
+## Start Here
+
+If you are new to this project, read in this order:
+
+1. [User Guide](Docs/user_guide.md)
+2. [Build on Linux](BUILDING_ON_LINUX.md)
+3. [Integration Plan](Docs/integration_plan.md)
+4. [Keywords and Profiles](Docs/keywords_and_profiles.md)
+
+---
+
 ## Documentation
 
+- [Documentation Index](Docs/INDEX.md) - Complete map of available docs
+- [User Guide](Docs/user_guide.md) - Practical usage of rcc-check
+- [Keywords and Profiles](Docs/keywords_and_profiles.md) - RCC/TCC terms and profile modes
+- [Integration Plan](Docs/integration_plan.md) - VS Code, CI, and Make rollout strategy
 - [rust_c_cpp_spec.md](Docs/rust_c_cpp_spec.md) - Core specification and semantic enhancements
 - [Rust Abstractions](Docs/rust_abstractions.md) - Integrated Rust safety patterns
 - [Vision](Docs/vision.md) - Project philosophy and goals
