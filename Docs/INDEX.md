@@ -94,24 +94,30 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - Finished vs not-finished checklist for current implementation
 - ArXiv-ready claim framing and evidence boundaries
 
+### 12. [arxiv_draft_rustcc_cpp17.md](arxiv_draft_rustcc_cpp17.md)
+**论文草稿 / ArXiv Draft**
+- Research-claim boundaries and safe positioning
+- Draft abstract and evaluation plan
+- Reproducibility checklist
+
 ---
 
 ## 技术文档 / Technical Documentation
 
-### 12. [BUILD.md](../BUILD.md)
+### 13. [BUILD.md](../BUILD.md)
 **构建说明 / Build Instructions**
 - Prerequisites and dependencies
 - Build steps for different platforms
 - 构建前提和依赖项
 - 不同平台的构建步骤
 
-### 13. [BUILDING_ON_WINDOWS.md](../BUILDING_ON_WINDOWS.md)
+### 14. [BUILDING_ON_WINDOWS.md](../BUILDING_ON_WINDOWS.md)
 **Windows 构建 / Windows Build**
 - Windows-specific build instructions
 - Visual Studio and MSVC setup
 - Windows 特定的构建说明
 
-### 14. [BUILDING_ON_LINUX.md](../BUILDING_ON_LINUX.md)
+### 15. [BUILDING_ON_LINUX.md](../BUILDING_ON_LINUX.md)
 **Linux 构建 / Linux Build**
 - Clean Linux validation workflow
 - Distro package prerequisites
@@ -119,20 +125,20 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - 干净 Linux 验证流程
 - 发行版依赖安装与 LLVM/Clang 路径排查
 
-### 15. [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md)
+### 16. [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md)
 **项目结构 / Project Structure**
 - Directory layout / 目录布局
 - Module organization / 模块组织
 - File descriptions / 文件说明
 
-### 16. [COMPLETE_MVP.md](../COMPLETE_MVP.md)
+### 17. [COMPLETE_MVP.md](../COMPLETE_MVP.md)
 **MVP 里程碑记录 / MVP Milestone Record**
 - Historical milestone summary
 - Refer to Working Track for current status
 - 历史里程碑总结
 - 当前状态请以 Working Track 为准
 
-### 17. [Working Track .md](../Working%20Track%20.md)
+### 18. [Working Track .md](../Working%20Track%20.md)
 **工作追踪 / Work Tracking**
 - Development progress
 - Task tracking

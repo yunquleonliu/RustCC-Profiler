@@ -153,6 +153,7 @@ scripts/rcc-check-changed.sh --tcc-only
 - [Integration Plan](Docs/integration_plan.md) - VS Code, CI, and Make rollout strategy
 - [End-to-End Guide](Docs/end_to_end.md) - One complete path from setup to production usage
 - [User Workflow and Research Note](Docs/user_workflow_and_research_note.md) - simplified workflow and publication-safe claim framing
+- [ArXiv Draft](Docs/arxiv_draft_rustcc_cpp17.md) - manuscript starter with bounded claims and evaluation plan
 - [rust_c_cpp_spec.md](Docs/rust_c_cpp_spec.md) - Core specification and semantic enhancements
 - [Rust Abstractions](Docs/rust_abstractions.md) - Integrated Rust safety patterns
 - [Vision](Docs/vision.md) - Project philosophy and goals
