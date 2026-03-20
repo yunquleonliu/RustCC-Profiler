@@ -3,14 +3,14 @@
 
 ## Quick Start / 快速开始
 
-Recommended for clean verification: Linux first.
-推荐用于干净验证：优先在 Linux 上构建。
+Current supported verification target: Linux only.
+当前受支持的验证目标：仅 Linux。
 
 ### Prerequisites / 前置要求
 
 - **CMake** 3.20 or higher / 3.20 或更高版本
 - **C++17** compatible compiler / 兼容 C++17 的编译器
-- **LLVM/Clang** 15, 16, or 17 / 版本 15、16 或 17
+- **LLVM/Clang** 14 (currently validated) / 当前已验证版本为 14
 
 ### Building / 构建
 
@@ -33,8 +33,9 @@ Linux 依赖安装和故障排查见：
 
 - [BUILDING_ON_LINUX.md](BUILDING_ON_LINUX.md)
 
-For Windows-specific setup, see:
-Windows 专用配置见：
+Windows build instructions are kept for future re-enable, but are not part of the
+currently supported verification path.
+Windows 构建说明保留供后续恢复使用，但当前不属于受支持的验证路径。
 
 - [BUILDING_ON_WINDOWS.md](BUILDING_ON_WINDOWS.md)
 

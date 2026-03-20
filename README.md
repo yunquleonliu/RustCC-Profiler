@@ -116,8 +116,8 @@ What is still in progress:
 - ⚠ Some docs are being reconciled from historical "MVP complete" language
 
 Recommended validation path:
-- Build and verify on Linux first (`BUILDING_ON_LINUX.md`)
-- Then replay validation on Windows if needed
+- Build and verify on Linux (`BUILDING_ON_LINUX.md`)
+- Windows support is deferred for now and will be added back later
 
 ---
 
@@ -128,8 +128,8 @@ Recommended validation path:
 - [Vision](Docs/vision.md) - Project philosophy and goals
 - [Manifesto](Rust_Cpp_Manifesto.md) - Design rationale
 - [Building](BUILD.md) - Build instructions
-- [Build on Linux](BUILDING_ON_LINUX.md) - Clean Linux verification workflow
-- [Build on Windows](BUILDING_ON_WINDOWS.md) - Windows setup and troubleshooting
+- [Build on Linux](BUILDING_ON_LINUX.md) - Current supported verification workflow
+- [Build on Windows](BUILDING_ON_WINDOWS.md) - Deferred setup notes for future re-enable
 - [Project Structure](PROJECT_STRUCTURE.md) - Code organization
 - [Working Track](Working%20Track%20.md) - Live implementation status
 
