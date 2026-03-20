@@ -59,6 +59,22 @@ pass Clang arguments after `--`.
 This is the same pattern used by the automated test suite.
 这与自动化测试所使用的调用方式一致。
 
+For a simpler one-command flow, use helper scripts:
+如果你希望一条命令完成，建议使用辅助脚本：
+
+```bash
+scripts/rcc-check-file.sh examples/01_smart_pointers_t.cc
+```
+
+```bash
+scripts/rcc-check-changed.sh --tcc-only
+```
+
+`rcc-check-file.sh` auto-detects whether a source is present in
+`compile_commands.json`. If not, it enables fallback include mode automatically.
+`rcc-check-file.sh` 会自动判断源文件是否存在于 `compile_commands.json` 中；
+若不存在，会自动启用回退包含路径模式。
+
 ---
 
 ## 3. Supported CLI Flags
@@ -72,6 +88,7 @@ The current binary supports these user-facing options:
 - `--no-ownership`: disable ownership-category rules
 - `--no-lifetime`: disable lifetime-category rules
 - `--no-concurrency`: disable concurrency-category rules
+- `--auto-stdcpp-includes`: append fallback C++17 stdlib include paths for standalone files
 
 Important:
 重要说明：
@@ -246,6 +263,22 @@ RCC 最适合以下使用方式：
 If your file is outside the compilation database, you must supply enough Clang
 arguments after `--` for parsing to succeed.
 如果文件不在编译数据库中，就必须在 `--` 后补充足够的 Clang 参数，确保解析成功。
+
+Alternative:
+替代方案：
+
+- use `--auto-stdcpp-includes` directly when running `rcc-check`
+- 或直接在 `rcc-check` 命令中启用 `--auto-stdcpp-includes`
+
+Example:
+示例：
+
+```bash
+./build-linux/src/rcc-check \
+  --auto-stdcpp-includes \
+  -p build-linux \
+  examples/01_smart_pointers_t.cc
+```
 
 ---
 

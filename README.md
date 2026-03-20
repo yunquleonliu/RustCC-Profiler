@@ -130,6 +130,17 @@ If you are new to this project, read in this order:
 4. [Integration Plan](Docs/integration_plan.md)
 5. [Keywords and Profiles](Docs/keywords_and_profiles.md)
 6. [End-to-End Guide](Docs/end_to_end.md)
+7. [User Workflow and Research Note](Docs/user_workflow_and_research_note.md)
+
+Quick one-command usage:
+
+```bash
+scripts/rcc-check-file.sh examples/01_smart_pointers_t.cc
+```
+
+```bash
+scripts/rcc-check-changed.sh --tcc-only
+```
 
 ---
 
@@ -141,6 +152,7 @@ If you are new to this project, read in this order:
 - [CI/CD Quickstart](Docs/ci_cd_quickstart.md) - Fastest low-friction CI adoption path
 - [Integration Plan](Docs/integration_plan.md) - VS Code, CI, and Make rollout strategy
 - [End-to-End Guide](Docs/end_to_end.md) - One complete path from setup to production usage
+- [User Workflow and Research Note](Docs/user_workflow_and_research_note.md) - simplified workflow and publication-safe claim framing
 - [rust_c_cpp_spec.md](Docs/rust_c_cpp_spec.md) - Core specification and semantic enhancements
 - [Rust Abstractions](Docs/rust_abstractions.md) - Integrated Rust safety patterns
 - [Vision](Docs/vision.md) - Project philosophy and goals
