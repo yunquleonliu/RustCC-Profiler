@@ -1,5 +1,6 @@
 ﻿# Build directories / 构建目录
 build/
+build-linux/
 cmake-build-*/
 out/
 

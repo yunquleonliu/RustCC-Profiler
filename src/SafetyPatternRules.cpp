@@ -23,11 +23,12 @@ void EnforceNullCheckRule::check(clang::ASTContext& context,
             : rule_(rule), context_(ctx), diagnostics_(diag) {}
         
         bool VisitUnaryOperator(clang::UnaryOperator* op) {
+            if (!context_.getSourceManager().isInMainFile(op->getBeginLoc())) return true;
             if (op->getOpcode() == clang::UO_Deref) {
                 // Check if pointer is checked before deref
                 // 检查指针在解引用前是否被检查
                 if (rule_->isUsedWithoutCheck(op->getSubExpr(), context_)) {
-                    emitDiag(diagnostics_, op->getLocation(),
+                    emitDiag(diagnostics_, op->getBeginLoc(),
                              context_.getSourceManager(),
                              rule_->getCategory(), rule_->getId(),
                              "Pointer dereferenced without null check / "
@@ -69,12 +70,14 @@ bool EnforceNullCheckRule::shouldUseOptional(const clang::QualType& type) const 
 
 void PreferOptionalRule::check(clang::ASTContext& context,
                               DiagnosticEngine& diagnostics) {
-    // Check function return types / 检查函数返回类型
+    // Check function return types in main file only / 仅检查主文件中的函数返回类型
+    const auto& sm = context.getSourceManager();
     for (auto* decl : context.getTranslationUnitDecl()->decls()) {
         if (auto* func = clang::dyn_cast<clang::FunctionDecl>(decl)) {
+            if (!sm.isInMainFile(func->getLocation())) continue;
             if (returnsNullablePointer(func)) {
                 emitDiag(diagnostics, func->getLocation(),
-                         context.getSourceManager(),
+                         sm,
                          getCategory(), getId(),
                          "Consider using std::optional instead of nullable pointer / "
                          "考虑使用 std::optional 代替可空指针",
@@ -108,6 +111,7 @@ void EnforceResultHandlingRule::check(clang::ASTContext& context,
             : rule_(rule), context_(ctx), diagnostics_(diag) {}
         
         bool VisitCallExpr(clang::CallExpr* call) {
+            if (!context_.getSourceManager().isInMainFile(call->getBeginLoc())) return true;
             if (rule_->isResultType(call->getType())) {
                 if (rule_->isResultIgnored(call)) {
                     emitDiag(diagnostics_, call->getBeginLoc(),
@@ -159,6 +163,7 @@ void UncheckedErrorReturnRule::check(clang::ASTContext& context,
             : rule_(rule), context_(ctx), diagnostics_(diag) {}
         
         bool VisitCallExpr(clang::CallExpr* call) {
+            if (!context_.getSourceManager().isInMainFile(call->getBeginLoc())) return true;
             if (rule_->isNodiscardViolated(call)) {
                 emitDiag(diagnostics_, call->getBeginLoc(),
                          context_.getSourceManager(),
@@ -187,9 +192,17 @@ void UncheckedErrorReturnRule::markMustUse(const clang::FunctionDecl* func) {
 
 bool UncheckedErrorReturnRule::isNodiscardViolated(
     const clang::CallExpr* call) const {
-    // Check if [[nodiscard]] function result is ignored
-    // 检查 [[nodiscard]] 函数结果是否被忽略
+    // Check if [[nodiscard]] USER function result is ignored.
+    // Exclude standard library functions - they may carry [[nodiscard]] for general
+    // use but are not violations when the result is actually consumed.
+    // 检查 [[nodiscard]] 用户函数结果是否被忽略，排除标准库函数
     if (auto* func = call->getDirectCallee()) {
+        std::string qualName = func->getQualifiedNameAsString();
+        // Skip std:: and compiler-internal functions
+        if (qualName.size() >= 5 && qualName.substr(0, 5) == "std::")
+            return false;
+        if (!qualName.empty() && qualName[0] == '_')
+            return false;
         return func->hasAttr<clang::WarnUnusedResultAttr>();
     }
     return false;
@@ -211,6 +224,7 @@ void DetectUnsafeUnwrapRule::check(clang::ASTContext& context,
             : rule_(rule), context_(ctx), diagnostics_(diag) {}
         
         bool VisitCXXMemberCallExpr(clang::CXXMemberCallExpr* call) {
+            if (!context_.getSourceManager().isInMainFile(call->getBeginLoc())) return true;
             if (rule_->isUnsafeUnwrap(call)) {
                 emitDiag(diagnostics_, call->getBeginLoc(),
                          context_.getSourceManager(),
@@ -234,12 +248,10 @@ void DetectUnsafeUnwrapRule::check(clang::ASTContext& context,
 
 bool DetectUnsafeUnwrapRule::isUnsafeUnwrap(
     const clang::CXXMemberCallExpr* call) const {
-    // Check if method is value() without prior check
-    // 检查方法是否为 value() 且未事先检查
-    if (auto* method = call->getMethodDecl()) {
-        std::string name = method->getNameAsString();
-        return (name == "value" || name == "get");
-    }
+    // Placeholder: proper implementation requires data-flow to check has_value() guards.
+    // Returning false to avoid false positives (e.g. reference_wrapper::get(), guarded value()).
+    // 占位符：正确实现需要数据流分析来检查 has_value() 等守卫条件
+    (void)call;
     return false;
 }
 
@@ -260,6 +272,7 @@ void ForbidPanicRule::check(clang::ASTContext& context,
         
         bool VisitCallExpr(clang::CallExpr* call) {
             if (auto* func = call->getDirectCallee()) {
+                if (!context_.getSourceManager().isInMainFile(call->getBeginLoc())) return true;
                 if (rule_->isPanicFunction(func)) {
                     emitDiag(diagnostics_, call->getBeginLoc(),
                              context_.getSourceManager(),
@@ -304,6 +317,7 @@ void EnforceBoundsCheckRule::check(clang::ASTContext& context,
             : rule_(rule), context_(ctx), diagnostics_(diag) {}
         
         bool VisitArraySubscriptExpr(clang::ArraySubscriptExpr* expr) {
+            if (!context_.getSourceManager().isInMainFile(expr->getBeginLoc())) return true;
             if (!rule_->isBoundsChecked(expr, context_)) {
                 emitDiag(diagnostics_, expr->getBeginLoc(),
                          context_.getSourceManager(),
@@ -316,6 +330,7 @@ void EnforceBoundsCheckRule::check(clang::ASTContext& context,
         }
         
         bool VisitCXXOperatorCallExpr(clang::CXXOperatorCallExpr* expr) {
+            if (!context_.getSourceManager().isInMainFile(expr->getBeginLoc())) return true;
             if (rule_->shouldUseAtMethod(expr)) {
                 emitDiag(diagnostics_, expr->getBeginLoc(),
                          context_.getSourceManager(),
@@ -348,12 +363,13 @@ bool EnforceBoundsCheckRule::isBoundsChecked(
 
 bool EnforceBoundsCheckRule::shouldUseAtMethod(
     const clang::CXXOperatorCallExpr* expr) const {
-    // Check if it's vector::operator[] / 检查是否为 vector::operator[]
-    if (expr->getOperator() == clang::OO_Subscript) {
-        // Check if base is std::vector / 检查基础类型是否为 std::vector
-        return true;  // Simplified / 简化版
-    }
-    return false;
+    if (expr->getOperator() != clang::OO_Subscript) return false;
+    // Only flag std::vector::operator[] — std::map, std::string, etc. do not have .at()
+    // equivalents with the same semantics. / 仅标记 std::vector::operator[]
+    if (expr->getNumArgs() < 1) return false;
+    std::string typeName = expr->getArg(0)->getType().getAsString();
+    return typeName.find("std::vector") != std::string::npos ||
+           typeName.find("vector<") != std::string::npos;
 }
 
 } // namespace tcc

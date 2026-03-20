@@ -8,11 +8,34 @@ enable_testing()
 # Test utilities / 测试工具
 set(TEST_DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/data)
 
+# Add test inputs as a non-built object target so compile_commands.json
+# contains entries for the analyzed files. This gives clang-tooling
+# the same system include discovery as normal C++ compilation.
+file(GLOB RCC_TEST_INPUTS CONFIGURE_DEPENDS
+    ${TEST_DATA_DIR}/pass/*.cpp
+    ${TEST_DATA_DIR}/fail/*.cpp
+)
+
+add_library(rcc_test_compile_db OBJECT EXCLUDE_FROM_ALL ${RCC_TEST_INPUTS})
+target_compile_features(rcc_test_compile_db PRIVATE cxx_std_17)
+
+# Fallback include paths used when clang-tooling cannot infer libstdc++ paths.
+set(RCC_TEST_CLANG_ARGS
+    -std=c++17
+    -I/usr/include/c++/11
+    -I/usr/include/x86_64-linux-gnu/c++/11
+    -I/usr/include/c++/11/backward
+    -I/usr/lib/gcc/x86_64-linux-gnu/11/include
+    -I/usr/local/include
+    -I/usr/include/x86_64-linux-gnu
+    -I/usr/include
+)
+
 # Helper function to add RCC test / 添加 RCC 测试的辅助函数
 function(add_rcc_test test_name source_file should_pass)
     add_test(
         NAME ${test_name}
-        COMMAND rcc-check ${TEST_DATA_DIR}/${source_file}
+        COMMAND rcc-check -p ${CMAKE_BINARY_DIR} ${TEST_DATA_DIR}/${source_file} -- ${RCC_TEST_CLANG_ARGS}
     )
     
     if(should_pass)

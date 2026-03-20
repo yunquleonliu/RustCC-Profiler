@@ -26,7 +26,7 @@ using namespace llvm;
 static cl::OptionCategory RCCCategory("Rust C/C++ Options / Rust C/C++ 选项");
 
 static cl::opt<bool> ShowVersion(
-    "version",
+    "rcc-version",
     cl::desc("Show version information / 显示版本信息"),
     cl::cat(RCCCategory)
 );
@@ -199,7 +199,7 @@ int main(int argc, const char** argv) {
     
     llvm::errs() << "\n✗ RCC rule violations found:\n";
     llvm::errs() << "✗ 发现 RCC 规则违规:\n\n";
-    diagnostics.printAll(llvm::errs());
+    diagnostics.printAll(std::cerr);
     
     if (diagnostics.hasErrors()) {
         llvm::errs() << "\nErrors: " << diagnostics.getErrorCount() << "\n";

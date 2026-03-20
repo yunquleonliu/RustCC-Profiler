@@ -51,21 +51,6 @@ public:
     // Visit thread creation / 访问线程创建
     bool VisitCXXConstructExpr(clang::CXXConstructExpr* expr);
     
-    // Move semantics: track std::move calls / 移动语义：追踪 std::move 调用
-    bool VisitCallExpr(clang::CallExpr* expr);
-
-    // Move semantics: detect use-after-move / 移动语义：检测移动后使用
-    bool VisitDeclRefExpr(clang::DeclRefExpr* expr);
-
-    // Safety: detect unsafe .value()/.get() unwrap / 安全：检测不安全的 .value()/.get() 调用
-    bool VisitCXXMemberCallExpr(clang::CXXMemberCallExpr* expr);
-
-    // Safety: detect unchecked array subscript / 安全：检测未检查的数组下标
-    bool VisitArraySubscriptExpr(clang::ArraySubscriptExpr* expr);
-
-    // Safety: detect vector::operator[] (suggest .at()) / 安全：检测 vector::operator[]（建议使用 .at()）
-    bool VisitCXXOperatorCallExpr(clang::CXXOperatorCallExpr* expr);
-
     // Helper: Get source location / 辅助函数：获取源位置
     SourceLocation getSourceLocation(clang::SourceLocation loc) const;
     
@@ -79,9 +64,6 @@ private:
     clang::ASTContext& context_;
     const std::vector<std::unique_ptr<Rule>>& rules_;
     DiagnosticEngine& diagnostics_;
-
-    // Deduplication: track already-reported locations / 去重：追踪已报告的位置
-    mutable std::set<std::pair<unsigned, unsigned>> reportedMoveUses_;
 };
 
 } // namespace tcc

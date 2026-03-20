@@ -5,6 +5,8 @@
 #include "tcc/DiagnosticHelper.h"
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/AST/StmtVisitor.h>
+#include <clang/Basic/SourceManager.h>
+#include <map>
 
 namespace tcc {
 
@@ -15,34 +17,46 @@ public:
                                 clang::ASTContext& context,
                                 DiagnosticEngine& diagnostics)
         : rule_(rule), context_(context), diagnostics_(diagnostics) {}
-    
-    // Visit move constructor calls / 访问移动构造函数调用
-    bool VisitCXXConstructExpr(clang::CXXConstructExpr* expr) {
-        if (expr->getConstructor()->isMoveConstructor()) {
-            rule_->trackMoveOperation(expr);
-        }
-        return true;
-    }
-    
-    // Visit std::move calls / 访问 std::move 调用
+
+    // Record the source var of std::move(x) at x's own DeclRefExpr location.
+    // VisitCallExpr fires BEFORE children's VisitDeclRefExpr in data-recursion order,
+    // so moved_at_[x] == x.loc when VisitDeclRefExpr processes 'x' inside std::move(x).
+    // isBeforeInTranslationUnit(x.loc, x.loc) returns false => skip the move-source ref.
     bool VisitCallExpr(clang::CallExpr* call) {
+        const auto& sm = context_.getSourceManager();
+        if (!sm.isInMainFile(call->getBeginLoc())) return true;
         if (auto* func = call->getDirectCallee()) {
             std::string name = func->getQualifiedNameAsString();
-            if (name == "std::move") {
-                rule_->trackMoveCall(call);
+            if (name == "std::move" && call->getNumArgs() > 0) {
+                if (auto* declRef = clang::dyn_cast<clang::DeclRefExpr>(
+                        call->getArg(0)->IgnoreParenImpCasts())) {
+                    if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(declRef->getDecl())) {
+                        // Store location of 'x' in std::move(x), not the call's BeginLoc
+                        moved_at_[varDecl] = declRef->getLocation();
+                    }
+                }
             }
         }
         return true;
     }
-    
-    // Visit variable references / 访问变量引用
+
+    // Visit variable references to detect use-after-move / 访问变量引用以检测移动后使用
     bool VisitDeclRefExpr(clang::DeclRefExpr* ref) {
-        if (rule_->isUsedAfterMove(ref)) {
-            emitDiag(diagnostics_, ref->getLocation(),
-                     context_.getSourceManager(),
-                     rule_->getCategory(), rule_->getId(),
-                     "Variable used after move / 变量在移动后被使用",
-                     Severity::Error);
+        const auto& sm = context_.getSourceManager();
+        if (!sm.isInMainFile(ref->getLocation())) return true;
+        if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(ref->getDecl())) {
+            auto it = moved_at_.find(varDecl);
+            if (it != moved_at_.end()) {
+                // Only flag if this use is strictly after the move source.
+                // When L == M (the ref inside std::move(x)), returns false => skip.
+                if (sm.isBeforeInTranslationUnit(it->second, ref->getLocation())) {
+                    emitDiag(diagnostics_, ref->getLocation(),
+                             sm,
+                             rule_->getCategory(), rule_->getId(),
+                             "Variable used after move / 变量在移动后被使用",
+                             Severity::Error);
+                }
+            }
         }
         return true;
     }
@@ -51,6 +65,7 @@ private:
     UseAfterMoveRule* rule_;
     clang::ASTContext& context_;
     DiagnosticEngine& diagnostics_;
+    std::map<const clang::VarDecl*, clang::SourceLocation> moved_at_;
 };
 
 //=============================================================================
@@ -61,42 +76,6 @@ void UseAfterMoveRule::check(clang::ASTContext& context,
                              DiagnosticEngine& diagnostics) {
     MoveTrackingVisitor visitor(this, context, diagnostics);
     visitor.TraverseDecl(context.getTranslationUnitDecl());
-}
-
-void UseAfterMoveRule::trackMoveOperation(const clang::CXXConstructExpr* expr) {
-    // Track the source of the move / 追踪移动的源
-    if (expr->getNumArgs() > 0) {
-        if (auto* declRef = clang::dyn_cast<clang::DeclRefExpr>(
-                expr->getArg(0)->IgnoreParenImpCasts())) {
-            if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(declRef->getDecl())) {
-                variable_states_[varDecl] = VariableState::Moved;
-                moved_variables_.insert(varDecl);
-            }
-        }
-    }
-}
-
-void UseAfterMoveRule::trackMoveCall(const clang::CallExpr* expr) {
-    // Track std::move() argument / 追踪 std::move() 的参数
-    if (expr->getNumArgs() > 0) {
-        if (auto* declRef = clang::dyn_cast<clang::DeclRefExpr>(
-                expr->getArg(0)->IgnoreParenImpCasts())) {
-            if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(declRef->getDecl())) {
-                variable_states_[varDecl] = VariableState::Moved;
-                moved_variables_.insert(varDecl);
-            }
-        }
-    }
-}
-
-bool UseAfterMoveRule::isUsedAfterMove(const clang::DeclRefExpr* ref) const {
-    if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(ref->getDecl())) {
-        auto it = variable_states_.find(varDecl);
-        if (it != variable_states_.end() && it->second == VariableState::Moved) {
-            return true;
-        }
-    }
-    return false;
 }
 
 //=============================================================================
@@ -123,12 +102,13 @@ bool DoubleMoveRule::isMovedMultipleTimes(const clang::VarDecl* var) const {
 
 void EnforceMoveSemanticsRule::check(clang::ASTContext& context,
                                     DiagnosticEngine& diagnostics) {
-    // Visit all class definitions / 访问所有类定义
+    // Visit all class definitions in the main file / 访问主文件中的所有类定义
+    const auto& sm = context.getSourceManager();
     for (auto* decl : context.getTranslationUnitDecl()->decls()) {
         if (auto* record = clang::dyn_cast<clang::CXXRecordDecl>(decl)) {
+            if (!sm.isInMainFile(record->getLocation())) continue;
             if (record->isCompleteDefinition() && requiresMovSemantics(record)) {
                 if (!hasProperMoveSemantics(record)) {
-                    auto& sm = context.getSourceManager();
                     emitDiag(diagnostics, record->getLocation(), sm,
                              getCategory(), getId(),
                              "RAII type missing move semantics / RAII 类型缺少移动语义",

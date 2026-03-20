@@ -18,9 +18,6 @@ set(RCC_SOURCES
     SafetyPatternRules.cpp
 )
 
-# LLVM/Clang components needed / 需要的 LLVM/Clang 组件
-llvm_map_components_to_libnames(LLVM_LIBS support core)
-
 set(CLANG_LIBS
     clangTooling
     clangFrontend
@@ -42,7 +39,6 @@ add_executable(rcc-check ${RCC_SOURCES})
 # Link libraries / 链接库
 target_link_libraries(rcc-check PRIVATE
     ${CLANG_LIBS}
-    ${LLVM_LIBS}
 )
 
 # Set output name / 设置输出名称

@@ -42,7 +42,7 @@ private:
         SourceLocation srcLoc(presumedLoc.getFilename(), presumedLoc.getLine(), presumedLoc.getColumn());
         
         Diagnostic diag(
-            Severity::Warning,
+            Severity::Error,
             "Global/static mutable state without synchronization / "
             "全局/静态可变状态没有同步",
             srcLoc, RuleCategory::Concurrency, "TCC-CONC-001"
@@ -72,7 +72,10 @@ bool ForbidUnsyncSharedStateRule::isMutableSharedState(clang::VarDecl* decl) con
     // Check if global or static / 检查是否是全局或静态
     bool isShared = decl->hasGlobalStorage() || decl->isStaticLocal();
     if (!isShared) return false;
-    
+
+    // Thread-local storage is NOT shared between threads / 线程局部存储不在线程间共享
+    if (decl->getTLSKind() != clang::VarDecl::TLS_None) return false;
+
     // Check if mutable (not const) / 检查是否可变（非 const）
     if (decl->getType().isConstQualified()) return false;
     
@@ -92,7 +95,7 @@ public:
         : context_(context), diagnostics_(diagnostics) {}
     
     bool VisitLambdaExpr(clang::LambdaExpr* lambda) {
-        if (!lambda || !isInMainFile(lambda->getLocation())) {
+        if (!lambda || !isInMainFile(lambda->getBeginLoc())) {
             return true;
         }
         
@@ -102,7 +105,13 @@ public:
                 auto* var = capture.getCapturedVar();
                 if (var && !var->getType().isConstQualified() && 
                     capture.getCaptureKind() == clang::LCK_ByRef) {
-                    reportViolation(lambda, var);
+                    // Only flag fundamental/pointer types - class types manage their own sync
+                    // 仅标记基础/指针类型，类类型通常自行管理同步
+                    auto varType = var->getType().getCanonicalType();
+                    if (varType->isBuiltinType() || varType->isPointerType() ||
+                        varType->isEnumeralType()) {
+                        reportViolation(lambda, var);
+                    }
                 }
             }
         }
@@ -117,7 +126,7 @@ private:
     
     void reportViolation(clang::LambdaExpr* lambda, clang::VarDecl* var) {
         const auto& sm = context_.getSourceManager();
-        auto loc = lambda->getLocation();
+        auto loc = lambda->getBeginLoc();
         auto presumedLoc = sm.getPresumedLoc(loc);
         
         SourceLocation srcLoc(presumedLoc.getFilename(), presumedLoc.getLine(), presumedLoc.getColumn());

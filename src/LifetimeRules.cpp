@@ -369,7 +369,7 @@ private:
         );
         
         Diagnostic diag(
-            Severity::Warning,
+            Severity::Error,
             "Reference member without clear lifetime tracking / "
             "没有明确生命周期跟踪的引用成员",
             srcLoc,

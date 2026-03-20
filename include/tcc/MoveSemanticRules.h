@@ -7,22 +7,10 @@
 #pragma once
 
 #include "tcc/Rule.h"
-#include <clang/AST/Expr.h>
 #include <clang/AST/Decl.h>
 #include <clang/AST/ExprCXX.h>
-#include <map>
-#include <set>
 
 namespace tcc {
-
-// Variable state tracking for move semantics
-// 移动语义的变量状态追踪
-enum class VariableState {
-    Owned,      // Has ownership / 拥有所有权
-    Moved,      // Has been moved / 已移动
-    Borrowed,   // Is borrowed / 被借用
-    Invalid     // Invalid (freed or post-move) / 无效
-};
 
 // Rule: TCC-OWN-005 - Detect use after move
 // 规则：TCC-OWN-005 - 检测移动后使用
@@ -33,18 +21,6 @@ public:
                        "Use after move detected / 检测到移动后使用") {}
     
     void check(clang::ASTContext& context, DiagnosticEngine& diagnostics) override;
-    
-    // Track variable states / 追踪变量状态
-    void trackMoveOperation(const clang::CXXConstructExpr* expr);
-    void trackMoveCall(const clang::CallExpr* expr);
-    
-    // Check if variable is accessed after move / 检查变量是否在移动后被访问
-    bool isUsedAfterMove(const clang::DeclRefExpr* ref) const;
-    
-private:
-    // State tracking / 状态追踪
-    std::map<const clang::VarDecl*, VariableState> variable_states_;
-    std::set<const clang::VarDecl*> moved_variables_;
 };
 
 // Rule: TCC-OWN-006 - Detect double move

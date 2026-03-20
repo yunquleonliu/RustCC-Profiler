@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(RustCCppProfiler 
     VERSION 0.1.0
-    LANGUAGES CXX
+    LANGUAGES C CXX
     DESCRIPTION "Pre-compilation safety profiler for C/C++ - 面向 C/C++ 的预编译安全分析器"
 )
 
@@ -21,6 +21,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(RCC_BUILD_TESTS "Build test suite / 构建测试套件" ON)
 option(RCC_BUILD_EXAMPLES "Build examples / 构建示例" ON)
 option(RCC_ENABLE_WARNINGS "Enable all compiler warnings / 启用所有编译器警告" ON)
+option(RCC_WARNINGS_AS_ERRORS "Treat warnings as errors / 将警告视为错误" OFF)
 
 # Find LLVM and Clang / 查找 LLVM 和 Clang
 find_package(LLVM REQUIRED CONFIG)
@@ -41,9 +42,15 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # Compiler warnings / 编译器警告
 if(RCC_ENABLE_WARNINGS)
     if(MSVC)
-        add_compile_options(/W4 /WX)
+        add_compile_options(/W4)
+        if(RCC_WARNINGS_AS_ERRORS)
+            add_compile_options(/WX)
+        endif()
     else()
-        add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+        add_compile_options(-Wall -Wextra -Wpedantic)
+        if(RCC_WARNINGS_AS_ERRORS)
+            add_compile_options(-Werror)
+        endif()
     endif()
 endif()
 

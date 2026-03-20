@@ -41,7 +41,7 @@ jobs:
         ctest --output-on-failure -C Release
     
     - name: Upload artifacts / 上传构建产物
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rcc-check-${{ matrix.os }}-llvm${{ matrix.llvm-version }}
         path: build/src/rcc-check*

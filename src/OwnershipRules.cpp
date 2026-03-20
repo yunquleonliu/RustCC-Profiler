@@ -19,7 +19,7 @@ public:
         : rule_(rule), context_(context), diagnostics_(diagnostics) {}
     
     bool VisitCXXNewExpr(clang::CXXNewExpr* expr) {
-        if (expr && isInMainFile(expr->getLocation())) {
+        if (expr && isInMainFile(expr->getBeginLoc())) {
             rule_->checkNewExpr(expr, context_, diagnostics_);
         }
         return true;
@@ -44,7 +44,7 @@ public:
         : rule_(rule), context_(context), diagnostics_(diagnostics) {}
     
     bool VisitCXXDeleteExpr(clang::CXXDeleteExpr* expr) {
-        if (expr && isInMainFile(expr->getLocation())) {
+        if (expr && isInMainFile(expr->getBeginLoc())) {
             rule_->checkDeleteExpr(expr, context_, diagnostics_);
         }
         return true;
@@ -71,7 +71,7 @@ void ForbidNewRule::checkNewExpr(clang::CXXNewExpr* expr,
                                  clang::ASTContext& context,
                                  DiagnosticEngine& diagnostics) {
     const auto& sm = context.getSourceManager();
-    auto loc = expr->getLocation();
+    auto loc = expr->getBeginLoc();
     
     if (!sm.isInMainFile(loc)) {
         return;
@@ -122,7 +122,7 @@ void ForbidDeleteRule::checkDeleteExpr(clang::CXXDeleteExpr* expr,
                                        clang::ASTContext& context,
                                        DiagnosticEngine& diagnostics) {
     const auto& sm = context.getSourceManager();
-    auto loc = expr->getLocation();
+    auto loc = expr->getBeginLoc();
     
     if (!sm.isInMainFile(loc)) {
         return;
@@ -171,7 +171,7 @@ public:
         : rule_(rule), context_(context), diagnostics_(diagnostics) {}
     
     bool VisitCallExpr(clang::CallExpr* call) {
-        if (!call || !isInMainFile(call->getLocStart())) {
+        if (!call || !isInMainFile(call->getBeginLoc())) {
             return true;
         }
         
@@ -199,7 +199,7 @@ private:
     
     void reportViolation(clang::CallExpr* call, const std::string& funcName) {
         const auto& sm = context_.getSourceManager();
-        auto loc = call->getLocStart();
+        auto loc = call->getBeginLoc();
         auto presumedLoc = sm.getPresumedLoc(loc);
         
         SourceLocation srcLoc(
