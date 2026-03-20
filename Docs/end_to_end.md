@@ -12,8 +12,7 @@ project from zero to production CI usage.
 RCC (Rust C/C++) is a pre-compilation safety profiler for C/C++.
 RCC（Rust C/C++）是一个面向 C/C++ 的预编译安全分析器。
 
-It analyzes code with Clang AST and reports rule violations before compilation
-is considered acceptable by your policy.
+It analyzes code with Clang AST and reports rule violations before compilation is considered acceptable by your policy.
 它基于 Clang AST 分析代码，并在策略层面于“可接受编译”之前报告规则违规。
 
 Key point:
