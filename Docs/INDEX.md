@@ -16,6 +16,7 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 4. [Keywords and Profiles](keywords_and_profiles.md) - RCC/TCC naming and rule prefixes
 5. [User Workflow and Research Note](user_workflow_and_research_note.md) - practical rollout and publication-ready positioning
 6. [Memory Vulnerability Demo](memory_vulnerability_demo.md) - sidecar hard-bug discovery walkthrough
+7. [Memory Sidecar Guide](memory_sidecar_guide.md) - near one-click integration and folder scanning
 
 ---
 
@@ -106,6 +107,12 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - Sidecar scanning flow for existing C/C++ projects
 - One-line commands for Linux and Windows
 - Expected high-risk rule hits and interpretation
+
+### 14. [memory_sidecar_guide.md](memory_sidecar_guide.md)
+**内存 Sidecar 使用指南 / Memory Sidecar Guide**
+- Windows-first near one-click integration path
+- Folder scanning helper script usage
+- Practical gate policy and quickrt scan interpretation
 
 ---
 
