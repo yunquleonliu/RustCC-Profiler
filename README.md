@@ -168,9 +168,9 @@ scripts/rcc-check-changed.sh --tcc-only
 
 ## License
 
-ALL RIGHTS RESERVED! 
+ALL RIGHTS RESERVED! Strictly exclude all big (over 10 employees) businesses for now.
 
-TBD (likely ONLY open to contributors). Strictly exclude all big (over 10 employees) businesses for now.
+For individual usage or research, we use Apache 2.0.
 
 ---
 
