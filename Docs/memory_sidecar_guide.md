@@ -4,6 +4,8 @@
 
 Run RCC as a sidecar scanner to find memory-risk issues in existing C/C++ code, with near one-command onboarding and no source rewrite.
 
+For a machine without local RCC build environment, use the portable flow in [rcc_portable_quickstart.md](rcc_portable_quickstart.md).
+
 ---
 
 ## 1) One-time setup
@@ -11,6 +13,9 @@ Run RCC as a sidecar scanner to find memory-risk issues in existing C/C++ code, 
 1. Build RCC once in this repo (already supported by `quick-build.ps1`).
 2. Confirm scanner exists:
    - `build/src/Release/rcc-check.exe`
+
+If you do not want any setup on target machine, skip to the standalone portable doc:
+- [rcc_portable_quickstart.md](rcc_portable_quickstart.md)
 
 ---
 

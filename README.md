@@ -133,6 +133,7 @@ If you are new to this project, read in this order:
 7. [User Workflow and Research Note](Docs/user_workflow_and_research_note.md)
 8. [Memory Vulnerability Demo](Docs/memory_vulnerability_demo.md)
 9. [Memory Sidecar Guide](Docs/memory_sidecar_guide.md)
+10. [RCC Portable Quickstart](Docs/rcc_portable_quickstart.md)
 
 Quick one-command usage:
 
@@ -162,6 +163,7 @@ scripts/rcc-check-changed.sh --tcc-only
 - [End-to-End Guide](Docs/end_to_end.md) - One complete path from setup to production usage
 - [Memory Vulnerability Demo](Docs/memory_vulnerability_demo.md) - Sidecar demo for severe memory-risk discovery
 - [Memory Sidecar Guide](Docs/memory_sidecar_guide.md) - Near one-click Windows-first sidecar integration and scanning
+- [RCC Portable Quickstart](Docs/rcc_portable_quickstart.md) - Use RCC on machines without local RCC build environment
 - [User Workflow and Research Note](Docs/user_workflow_and_research_note.md) - simplified workflow and publication-safe claim framing
 - [ArXiv Draft](Docs/arxiv_draft_rustcc_cpp17.md) - manuscript starter with bounded claims and evaluation plan
 - [rust_c_cpp_spec.md](Docs/rust_c_cpp_spec.md) - Core specification and semantic enhancements

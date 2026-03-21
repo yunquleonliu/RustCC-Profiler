@@ -17,6 +17,7 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 5. [User Workflow and Research Note](user_workflow_and_research_note.md) - practical rollout and publication-ready positioning
 6. [Memory Vulnerability Demo](memory_vulnerability_demo.md) - sidecar hard-bug discovery walkthrough
 7. [Memory Sidecar Guide](memory_sidecar_guide.md) - near one-click integration and folder scanning
+8. [RCC Portable Quickstart](rcc_portable_quickstart.md) - run RCC on machines without local build setup
 
 ---
 
@@ -113,6 +114,12 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - Windows-first near one-click integration path
 - Folder scanning helper script usage
 - Practical gate policy and quickrt scan interpretation
+
+### 15. [rcc_portable_quickstart.md](rcc_portable_quickstart.md)
+**RCC 便携式快速指南 / RCC Portable Quickstart**
+- Build once, run anywhere (Windows)
+- No local RCC build requirement on target machine
+- One-command folder scanning from portable bundle
 
 ---
 
