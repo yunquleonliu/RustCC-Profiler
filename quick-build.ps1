@@ -10,24 +10,32 @@ Write-Host ""
 # Initialize MSVC environment / 初始化 MSVC 环境
 Write-Host "Initializing MSVC environment... / 初始化 MSVC 环境..." -ForegroundColor Yellow
 $vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+$vcvarsCandidates = @()
 if (Test-Path $vsWhere) {
-    $vsPath = & $vsWhere -latest -property installationPath
+    $vsPath = & $vsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
     if ($vsPath) {
-        $vcvarsPath = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
-        if (Test-Path $vcvarsPath) {
-            Write-Host "✓ Found Visual Studio at: $vsPath" -ForegroundColor Green
-            # Import MSVC environment into PowerShell
-            $tempFile = [System.IO.Path]::GetTempFileName()
-            cmd /c "`"$vcvarsPath`" > nul && set" | Out-File -FilePath $tempFile
-            Get-Content $tempFile | ForEach-Object {
-                if ($_ -match "^([^=]+)=(.*)$") {
-                    [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], "Process")
-                }
-            }
-            Remove-Item $tempFile
-            Write-Host "✓ MSVC environment loaded / MSVC 环境已加载" -ForegroundColor Green
+        $vcvarsCandidates += (Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat")
+    }
+}
+
+# Fallback for Build Tools only installs / 仅安装 Build Tools 时的回退
+$vcvarsCandidates += "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
+
+$vcvarsPath = $vcvarsCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+if ($vcvarsPath) {
+    Write-Host "✓ Found vcvars64 at: $vcvarsPath" -ForegroundColor Green
+    # Import MSVC environment into PowerShell
+    $tempFile = [System.IO.Path]::GetTempFileName()
+    cmd /c "`"$vcvarsPath`" > nul && set" | Out-File -FilePath $tempFile
+    Get-Content $tempFile | ForEach-Object {
+        if ($_ -match "^([^=]+)=(.*)$") {
+            [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], "Process")
         }
     }
+    Remove-Item $tempFile
+    Write-Host "✓ MSVC environment loaded / MSVC 环境已加载" -ForegroundColor Green
+} else {
+    Write-Host "⚠ vcvars64.bat not found. Build may fail without MSVC environment." -ForegroundColor Yellow
 }
 
 # Check prerequisites / 检查先决条件
@@ -53,38 +61,52 @@ if ($cl) {
 # Check for LLVM/Clang - REQUIRED for Rust C/C++
 Write-Host ""
 Write-Host "Checking LLVM/Clang installation... / 检查 LLVM/Clang 安装..." -ForegroundColor Yellow
+$userLlvmArchives = @()
+if ($env:USERPROFILE -and (Test-Path "$env:USERPROFILE\llvm-dev")) {
+    $userLlvmArchives = Get-ChildItem "$env:USERPROFILE\llvm-dev" -Directory -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -like "clang+llvm-*-windows-msvc" } |
+        ForEach-Object { $_.FullName }
+}
+
 $llvmPaths = @(
     "C:\Program Files\LLVM",
     "C:\Program Files (x86)\LLVM",
     "$env:LLVM_HOME"
 )
 
+$llvmPaths += $userLlvmArchives
+
 $llvmFound = $false
 $llvmDir = $null
 foreach ($path in $llvmPaths) {
-    if ($path -and (Test-Path $path)) {
+    if (-not $path -or -not (Test-Path $path)) { continue }
+
+    $llvmConfig = Join-Path $path "lib\cmake\llvm\LLVMConfig.cmake"
+    $clangConfig = Join-Path $path "lib\cmake\clang\ClangConfig.cmake"
+
+    if ((Test-Path $llvmConfig) -and (Test-Path $clangConfig)) {
         $llvmDir = $path
         $llvmFound = $true
-        Write-Host "✓ LLVM found at: $llvmDir" -ForegroundColor Green
+        Write-Host "✓ LLVM/Clang development package found at: $llvmDir" -ForegroundColor Green
         break
     }
 }
 
 if (-not $llvmFound) {
-    Write-Host "✗ LLVM/Clang NOT FOUND! / 未找到 LLVM/Clang！" -ForegroundColor Red
+    Write-Host "✗ LLVM/Clang development package NOT FOUND! / 未找到 LLVM/Clang 开发包！" -ForegroundColor Red
     Write-Host ""
     Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Yellow
-    Write-Host "  Rust C/C++ requires LLVM/Clang libraries to function." -ForegroundColor White
-    Write-Host "  Rust C/C++ 需要 LLVM/Clang 库才能运行。" -ForegroundColor White
+    Write-Host "  Rust C/C++ requires LLVM + Clang CMake development files." -ForegroundColor White
+    Write-Host "  Rust C/C++ 需要 LLVM + Clang 的 CMake 开发文件。" -ForegroundColor White
     Write-Host ""
     Write-Host "  Download from: https://github.com/llvm/llvm-project/releases" -ForegroundColor Cyan
-    Write-Host "  Recommended: LLVM 17.0.x (includes Clang)" -ForegroundColor Cyan
-    Write-Host "  推荐：LLVM 17.0.x（包含 Clang）" -ForegroundColor Cyan
+    Write-Host "  Required package: clang+llvm-<ver>-x86_64-pc-windows-msvc.tar.xz" -ForegroundColor Cyan
+    Write-Host "  必需包：clang+llvm-<ver>-x86_64-pc-windows-msvc.tar.xz" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "  Installation steps / 安装步骤:" -ForegroundColor White
-    Write-Host "  1. Download LLVM-17.x.x-win64.exe" -ForegroundColor Gray
-    Write-Host "  2. Run installer, select 'Add to PATH'" -ForegroundColor Gray
-    Write-Host "  3. Restart PowerShell" -ForegroundColor Gray
+    Write-Host "  1. Download clang+llvm-*.tar.xz" -ForegroundColor Gray
+    Write-Host "  2. Extract to a folder (e.g., %USERPROFILE%\llvm-dev\...)" -ForegroundColor Gray
+    Write-Host "  3. Set LLVM_HOME to that extracted root (optional)" -ForegroundColor Gray
     Write-Host "  4. Run this script again / 重新运行此脚本" -ForegroundColor Gray
     Write-Host "═══════════════════════════════════════════════════════════" -ForegroundColor Yellow
     Write-Host ""

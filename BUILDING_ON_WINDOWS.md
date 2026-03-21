@@ -30,21 +30,23 @@ Rust C/C++ 是一个**静态分析器**，使用 Clang 的 AST（抽象语法树
 
 ### Option 1: Official Pre-built Binaries (Recommended / 推荐)
 
-1. **Download LLVM 17.0.6 for Windows**
+1. **Download LLVM development archive for Windows (clang+llvm)**
    ```
-   https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/LLVM-17.0.6-win64.exe
+   https://github.com/llvm/llvm-project/releases
+   # Pick: clang+llvm-<version>-x86_64-pc-windows-msvc.tar.xz
    ```
 
-2. **Run the installer**
-   - ✅ Check "Add LLVM to system PATH"
-   - ✅ Install location: `C:\Program Files\LLVM`
+2. **Extract archive to a stable folder**
+   - ✅ Example: `%USERPROFILE%\llvm-dev\clang+llvm-<version>-x86_64-pc-windows-msvc`
+   - ✅ (Optional) set `LLVM_HOME` to that extracted root
 
 3. **Restart PowerShell**
 
 4. **Verify installation**
    ```powershell
-   clang --version
-   # Should show: clang version 17.0.6
+   # Verify CMake package files exist
+   Test-Path "$env:USERPROFILE\llvm-dev\clang+llvm-<version>-x86_64-pc-windows-msvc\lib\cmake\llvm\LLVMConfig.cmake"
+   Test-Path "$env:USERPROFILE\llvm-dev\clang+llvm-<version>-x86_64-pc-windows-msvc\lib\cmake\clang\ClangConfig.cmake"
    ```
 
 ### Option 2: Using vcpkg (Alternative / 备选)

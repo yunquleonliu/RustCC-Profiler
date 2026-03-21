@@ -23,13 +23,67 @@ option(RCC_BUILD_EXAMPLES "Build examples / 构建示例" ON)
 option(RCC_ENABLE_WARNINGS "Enable all compiler warnings / 启用所有编译器警告" ON)
 option(RCC_WARNINGS_AS_ERRORS "Treat warnings as errors / 将警告视为错误" OFF)
 
+# Windows auto-discovery for LLVM development package.
+# Windows 自动发现 LLVM 开发包。
+if(WIN32 AND NOT LLVM_DIR)
+    file(GLOB _rcc_user_llvm_dirs "$ENV{USERPROFILE}/llvm-dev/clang+llvm-*-windows-msvc")
+
+    set(_rcc_llvm_roots
+        "C:/Program Files/LLVM"
+        "C:/Program Files (x86)/LLVM"
+        "$ENV{LLVM_HOME}"
+    )
+    list(APPEND _rcc_llvm_roots ${_rcc_user_llvm_dirs})
+
+    foreach(_rcc_root IN LISTS _rcc_llvm_roots)
+        if(_rcc_root AND EXISTS "${_rcc_root}/lib/cmake/llvm/LLVMConfig.cmake")
+            set(LLVM_DIR "${_rcc_root}/lib/cmake/llvm" CACHE PATH "Path to LLVM CMake config" FORCE)
+            break()
+        endif()
+    endforeach()
+endif()
+
 # Find LLVM and Clang / 查找 LLVM 和 Clang
 find_package(LLVM REQUIRED CONFIG)
+
+# If LLVM_DIR is provided, infer sibling Clang_DIR when missing.
+# 如果提供了 LLVM_DIR，在缺失时推导同级 Clang_DIR。
+if(NOT Clang_DIR AND LLVM_DIR)
+    get_filename_component(_rcc_llvm_cmake_parent "${LLVM_DIR}" DIRECTORY)
+    set(_rcc_inferred_clang_dir "${_rcc_llvm_cmake_parent}/clang")
+    if(EXISTS "${_rcc_inferred_clang_dir}/ClangConfig.cmake")
+        set(Clang_DIR "${_rcc_inferred_clang_dir}" CACHE PATH "Path to Clang CMake config" FORCE)
+    endif()
+endif()
+
 find_package(Clang REQUIRED CONFIG)
+
+# Some prebuilt LLVM packages on Windows encode an absolute dependency on
+# Enterprise DIA SDK path. Remap it to BuildTools path when needed.
+# 某些 Windows 预编译 LLVM 包会硬编码 Enterprise DIA SDK 路径；
+# 当需要时重映射到 BuildTools 路径。
+if(WIN32)
+    set(_rcc_bad_dia "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK/lib/amd64/diaguids.lib")
+    set(_rcc_good_dia "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/DIA SDK/lib/amd64/diaguids.lib")
+
+    if(NOT EXISTS "${_rcc_bad_dia}" AND EXISTS "${_rcc_good_dia}")
+        if(TARGET LLVMDebugInfoPDB)
+            get_target_property(_rcc_pdb_links LLVMDebugInfoPDB INTERFACE_LINK_LIBRARIES)
+            if(_rcc_pdb_links)
+                string(REPLACE "${_rcc_bad_dia}" "${_rcc_good_dia}" _rcc_pdb_links_patched "${_rcc_pdb_links}")
+                if(NOT _rcc_pdb_links_patched STREQUAL _rcc_pdb_links)
+                    set_target_properties(LLVMDebugInfoPDB PROPERTIES
+                        INTERFACE_LINK_LIBRARIES "${_rcc_pdb_links_patched}"
+                    )
+                endif()
+            endif()
+        endif()
+    endif()
+endif()
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
-message(STATUS "Found Clang in: ${CLANG_INSTALL_PREFIX}")
+message(STATUS "Using ClangConfig.cmake in: ${Clang_DIR}")
 
 # LLVM definitions and include dirs / LLVM 定义和包含目录
 include_directories(${LLVM_INCLUDE_DIRS})

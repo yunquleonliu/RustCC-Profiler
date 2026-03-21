@@ -16,6 +16,7 @@
 #include <llvm/Support/CommandLine.h>
 
 #include <array>
+#include <cstdlib>
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -139,6 +140,25 @@ std::vector<std::string> buildFallbackStdcppArgs() {
     args.emplace_back("-std=c++17");
 
     std::vector<std::filesystem::path> candidates;
+#ifdef _WIN32
+    // Prefer INCLUDE from a Developer Command Prompt / vcvars64 environment.
+    // 优先使用 Developer Command Prompt / vcvars64 环境中的 INCLUDE。
+    if (const char* includeEnv = std::getenv("INCLUDE")) {
+        std::string includeStr(includeEnv);
+        size_t start = 0;
+        while (start <= includeStr.size()) {
+            size_t sep = includeStr.find(';', start);
+            const auto token = includeStr.substr(start, sep - start);
+            if (!token.empty()) {
+                candidates.emplace_back(token);
+            }
+            if (sep == std::string::npos) {
+                break;
+            }
+            start = sep + 1;
+        }
+    }
+#else
     const std::array<const char*, 7> versions = {"14", "13", "12", "11", "10", "9", "8"};
 
     for (const auto* version : versions) {
@@ -155,6 +175,7 @@ std::vector<std::string> buildFallbackStdcppArgs() {
     candidates.push_back("/usr/local/include");
     candidates.push_back("/usr/include/x86_64-linux-gnu");
     candidates.push_back("/usr/include");
+#endif
 
     std::unordered_set<std::string> seen;
     for (const auto& path : candidates) {

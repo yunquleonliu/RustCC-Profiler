@@ -124,7 +124,7 @@ private:
         return context_.getSourceManager().isInMainFile(loc);
     }
     
-    void reportViolation(clang::LambdaExpr* lambda, clang::VarDecl* var) {
+    void reportViolation(clang::LambdaExpr* lambda, clang::ValueDecl* var) {
         const auto& sm = context_.getSourceManager();
         auto loc = lambda->getBeginLoc();
         auto presumedLoc = sm.getPresumedLoc(loc);

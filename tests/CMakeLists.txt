@@ -19,17 +19,26 @@ file(GLOB RCC_TEST_INPUTS CONFIGURE_DEPENDS
 add_library(rcc_test_compile_db OBJECT EXCLUDE_FROM_ALL ${RCC_TEST_INPUTS})
 target_compile_features(rcc_test_compile_db PRIVATE cxx_std_17)
 
-# Fallback include paths used when clang-tooling cannot infer libstdc++ paths.
-set(RCC_TEST_CLANG_ARGS
-    -std=c++17
-    -I/usr/include/c++/11
-    -I/usr/include/x86_64-linux-gnu/c++/11
-    -I/usr/include/c++/11/backward
-    -I/usr/lib/gcc/x86_64-linux-gnu/11/include
-    -I/usr/local/include
-    -I/usr/include/x86_64-linux-gnu
-    -I/usr/include
-)
+# Fallback include paths used when clang-tooling cannot infer standard-library paths.
+# 当 clang-tooling 无法推断标准库路径时使用的回退参数。
+if(WIN32)
+    # On Windows, rely on compile_commands + INCLUDE from developer environment.
+    # 在 Windows 上依赖 compile_commands 和开发者环境中的 INCLUDE。
+    set(RCC_TEST_CLANG_ARGS
+        -std=c++17
+    )
+else()
+    set(RCC_TEST_CLANG_ARGS
+        -std=c++17
+        -I/usr/include/c++/11
+        -I/usr/include/x86_64-linux-gnu/c++/11
+        -I/usr/include/c++/11/backward
+        -I/usr/lib/gcc/x86_64-linux-gnu/11/include
+        -I/usr/local/include
+        -I/usr/include/x86_64-linux-gnu
+        -I/usr/include
+    )
+endif()
 
 # Helper function to add RCC test / 添加 RCC 测试的辅助函数
 function(add_rcc_test test_name source_file should_pass)
