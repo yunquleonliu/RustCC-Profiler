@@ -168,7 +168,7 @@ scripts/rcc-check-changed.sh --tcc-only
 
 ## License
 
-TBD (likely permissive, e.g. Apache-2.0 or MIT)
+ALL RIGHTS RESERVED. TBD (likely ONLY open to contributors, exclusively all Giant (over 100 empolyees) business for now)
 
 ---
 
