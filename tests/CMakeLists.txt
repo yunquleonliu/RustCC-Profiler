@@ -90,3 +90,6 @@ add_rcc_test(move_fail_use_after_move "fail/move_use_after_move.cpp" FALSE)
 add_rcc_test(safety_pass_option_result "pass/safety_option_result.cpp" TRUE)
 add_rcc_test(safety_fail_violations "fail/safety_violations.cpp" FALSE)
 
+# Memory hard-bug demo regression / 内存高风险示例回归测试
+add_rcc_test(memory_fail_hardbugs "fail/memory_hardbugs.cpp" FALSE)
+

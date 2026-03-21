@@ -180,6 +180,7 @@ See the `examples/` directory for:
 - ✗ `10_borrow_violations_t.cc` - Borrow conflicts / 借用冲突
 - ✓ `11_option_result_patterns_t.cc` - Option/Result best practices / Option/Result 最佳实践
 - ✗ `12_safety_violations_t.cc` - Safety violations / 安全违规
+- ✗ `13_memory_hardbugs_t.cc` - Severe memory-risk patterns demo / 严重内存风险模式演示
 
 ---
 

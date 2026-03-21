@@ -15,6 +15,7 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 3. [Integration Plan](integration_plan.md) - VS Code, CI, and Make adoption path
 4. [Keywords and Profiles](keywords_and_profiles.md) - RCC/TCC naming and rule prefixes
 5. [User Workflow and Research Note](user_workflow_and_research_note.md) - practical rollout and publication-ready positioning
+6. [Memory Vulnerability Demo](memory_vulnerability_demo.md) - sidecar hard-bug discovery walkthrough
 
 ---
 
@@ -100,24 +101,30 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - Draft abstract and evaluation plan
 - Reproducibility checklist
 
+### 13. [memory_vulnerability_demo.md](memory_vulnerability_demo.md)
+**内存漏洞演示 / Memory Vulnerability Demo**
+- Sidecar scanning flow for existing C/C++ projects
+- One-line commands for Linux and Windows
+- Expected high-risk rule hits and interpretation
+
 ---
 
 ## 技术文档 / Technical Documentation
 
-### 13. [BUILD.md](../BUILD.md)
+### 14. [BUILD.md](../BUILD.md)
 **构建说明 / Build Instructions**
 - Prerequisites and dependencies
 - Build steps for different platforms
 - 构建前提和依赖项
 - 不同平台的构建步骤
 
-### 14. [BUILDING_ON_WINDOWS.md](../BUILDING_ON_WINDOWS.md)
+### 15. [BUILDING_ON_WINDOWS.md](../BUILDING_ON_WINDOWS.md)
 **Windows 构建 / Windows Build**
 - Windows-specific build instructions
 - Visual Studio and MSVC setup
 - Windows 特定的构建说明
 
-### 15. [BUILDING_ON_LINUX.md](../BUILDING_ON_LINUX.md)
+### 16. [BUILDING_ON_LINUX.md](../BUILDING_ON_LINUX.md)
 **Linux 构建 / Linux Build**
 - Clean Linux validation workflow
 - Distro package prerequisites
@@ -125,20 +132,20 @@ This is the complete documentation index for the Rust C/C++ (Rust C) Profiler pr
 - 干净 Linux 验证流程
 - 发行版依赖安装与 LLVM/Clang 路径排查
 
-### 16. [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md)
+### 17. [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md)
 **项目结构 / Project Structure**
 - Directory layout / 目录布局
 - Module organization / 模块组织
 - File descriptions / 文件说明
 
-### 17. [COMPLETE_MVP.md](../COMPLETE_MVP.md)
+### 18. [COMPLETE_MVP.md](../COMPLETE_MVP.md)
 **MVP 里程碑记录 / MVP Milestone Record**
 - Historical milestone summary
 - Refer to Working Track for current status
 - 历史里程碑总结
 - 当前状态请以 Working Track 为准
 
-### 18. [Working Track .md](../Working%20Track%20.md)
+### 19. [Working Track .md](../Working%20Track%20.md)
 **工作追踪 / Work Tracking**
 - Development progress
 - Task tracking
@@ -218,6 +225,14 @@ All examples are in the `examples/` directory, categorized as **Pass** and **Fai
 - ✗ 悬空指针 / Dangling pointers
 - ✗ 容器存储原始指针 / Containers with raw pointers
 - **Violations**: TCC-LIFE-001~004
+
+#### [13_memory_hardbugs_t.cc](../examples/13_memory_hardbugs_t.cc) ⭐ 新增 / New
+**严重内存风险演示 / Severe Memory-Risk Demo**
+- ✗ 双重释放模式 / Double-free pattern
+- ✗ 返回悬空指针 / Dangling pointer return
+- ✗ 原始所有权指针跨 API 边界 / Raw owner escapes API boundary
+- ✗ malloc/free 手动生命周期 / Manual C allocator lifecycle
+- **Violations**: TCC-OWN-001~004, TCC-LIFE-002
 
 #### [06_thread_violations_t.cc](../examples/06_thread_violations_t.cc)
 **并发违规 / Concurrency Violations**

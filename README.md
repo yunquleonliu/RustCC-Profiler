@@ -131,11 +131,18 @@ If you are new to this project, read in this order:
 5. [Keywords and Profiles](Docs/keywords_and_profiles.md)
 6. [End-to-End Guide](Docs/end_to_end.md)
 7. [User Workflow and Research Note](Docs/user_workflow_and_research_note.md)
+8. [Memory Vulnerability Demo](Docs/memory_vulnerability_demo.md)
 
 Quick one-command usage:
 
 ```bash
 scripts/rcc-check-file.sh examples/01_smart_pointers_t.cc
+```
+
+Memory-risk demo (one line):
+
+```bash
+scripts/rcc-check-file.sh examples/13_memory_hardbugs_t.cc
 ```
 
 ```bash
@@ -152,6 +159,7 @@ scripts/rcc-check-changed.sh --tcc-only
 - [CI/CD Quickstart](Docs/ci_cd_quickstart.md) - Fastest low-friction CI adoption path
 - [Integration Plan](Docs/integration_plan.md) - VS Code, CI, and Make rollout strategy
 - [End-to-End Guide](Docs/end_to_end.md) - One complete path from setup to production usage
+- [Memory Vulnerability Demo](Docs/memory_vulnerability_demo.md) - Sidecar demo for severe memory-risk discovery
 - [User Workflow and Research Note](Docs/user_workflow_and_research_note.md) - simplified workflow and publication-safe claim framing
 - [ArXiv Draft](Docs/arxiv_draft_rustcc_cpp17.md) - manuscript starter with bounded claims and evaluation plan
 - [rust_c_cpp_spec.md](Docs/rust_c_cpp_spec.md) - Core specification and semantic enhancements
