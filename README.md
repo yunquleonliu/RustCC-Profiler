@@ -168,7 +168,9 @@ scripts/rcc-check-changed.sh --tcc-only
 
 ## License
 
-ALL RIGHTS RESERVED. TBD (likely ONLY open to contributors, exclusively all Giant (over 100 empolyees) business for now)
+ALL RIGHTS RESERVED! 
+
+TBD (likely ONLY open to contributors). Strictly exclude all big (over 10 employees) businesses for now.
 
 ---
 
