@@ -5,8 +5,10 @@
 #include "tcc/DiagnosticHelper.h"
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/AST/StmtVisitor.h>
+#include <clang/AST/ExprCXX.h>
 #include <clang/Basic/SourceManager.h>
 #include <map>
+#include <set>
 
 namespace tcc {
 
@@ -148,6 +150,116 @@ bool EnforceMoveSemanticsRule::hasProperMoveSemantics(
     }
     
     return hasMoveConstructor && hasMoveAssignment;
+}
+
+//=============================================================================
+// DoubleFreeViaAliasRule (TCC-OWN-008)
+// Detect: two pointers that alias the same `new` allocation are both deleted.
+//=============================================================================
+
+class DoubleFreeVisitor
+    : public clang::RecursiveASTVisitor<DoubleFreeVisitor> {
+public:
+    explicit DoubleFreeVisitor(clang::ASTContext& ctx, DiagnosticEngine& diags,
+                               DoubleFreeViaAliasRule* rule)
+        : ctx_(ctx), sm_(ctx.getSourceManager()), diags_(diags), rule_(rule) {}
+
+    // T* p = new T  — record p as owning a heap allocation.
+    bool VisitVarDecl(clang::VarDecl* var) {
+        if (!sm_.isInMainFile(var->getLocation())) return true;
+        if (!var->getType()->isPointerType()) return true;
+        if (!var->hasInit()) return true;
+        auto* init = var->getInit()->IgnoreParenImpCasts();
+        if (clang::isa<clang::CXXNewExpr>(init)) {
+            alloc_owners_.insert(var);
+        }
+        // T* q = p  (direct alias copy init)
+        if (auto* dre = clang::dyn_cast<clang::DeclRefExpr>(init)) {
+            if (auto* src = clang::dyn_cast<clang::VarDecl>(dre->getDecl())) {
+                if (alloc_owners_.count(src)) {
+                    aliases_[var] = src;
+                }
+            }
+        }
+        return true;
+    }
+
+    // Assignment: q = p  (alias propagation) or  p = new T
+    bool VisitBinaryOperator(clang::BinaryOperator* op) {
+        if (!sm_.isInMainFile(op->getOperatorLoc())) return true;
+        if (!op->isAssignmentOp()) return true;
+
+        auto* lhsDRE = clang::dyn_cast<clang::DeclRefExpr>(
+            op->getLHS()->IgnoreParenImpCasts());
+        if (!lhsDRE) return true;
+        auto* lhsVar = clang::dyn_cast<clang::VarDecl>(lhsDRE->getDecl());
+        if (!lhsVar || !lhsVar->getType()->isPointerType()) return true;
+
+        auto* rhs = op->getRHS()->IgnoreParenImpCasts();
+
+        // p = new T
+        if (clang::isa<clang::CXXNewExpr>(rhs)) {
+            alloc_owners_.insert(lhsVar);
+            return true;
+        }
+        // q = p  (copy alias)
+        if (auto* dre = clang::dyn_cast<clang::DeclRefExpr>(rhs)) {
+            if (auto* src = clang::dyn_cast<clang::VarDecl>(dre->getDecl())) {
+                if (alloc_owners_.count(src)) {
+                    aliases_[lhsVar] = src;
+                }
+            }
+        }
+        return true;
+    }
+
+    // delete p  — check if p aliases something already deleted.
+    bool VisitCXXDeleteExpr(clang::CXXDeleteExpr* del) {
+        if (!sm_.isInMainFile(del->getBeginLoc())) return true;
+        auto* arg = del->getArgument()->IgnoreParenImpCasts();
+        auto* dre = clang::dyn_cast<clang::DeclRefExpr>(arg);
+        if (!dre) return true;
+        auto* var = clang::dyn_cast<clang::VarDecl>(dre->getDecl());
+        if (!var) return true;
+
+        // Resolve alias: find the root allocating variable.
+        const clang::VarDecl* root = resolveAlias(var);
+
+        if (deleted_.count(root)) {
+            // Second delete of a variable aliasing the same allocation.
+            emitDiag(diags_, del->getBeginLoc(), sm_,
+                     rule_->getCategory(), rule_->getId(),
+                     "Potential double-free: '" + var->getNameAsString() +
+                     "' aliases already-deleted allocation / "
+                     "指针别名导致的潜在双重释放",
+                     Severity::Error);
+        } else {
+            deleted_.insert(root);
+        }
+        return true;
+    }
+
+private:
+    const clang::VarDecl* resolveAlias(const clang::VarDecl* v) const {
+        auto it = aliases_.find(v);
+        if (it != aliases_.end()) return resolveAlias(it->second);
+        return v;
+    }
+
+    clang::ASTContext& ctx_;
+    const clang::SourceManager& sm_;
+    DiagnosticEngine& diags_;
+    DoubleFreeViaAliasRule* rule_;
+
+    std::set<const clang::VarDecl*> alloc_owners_;
+    std::map<const clang::VarDecl*, const clang::VarDecl*> aliases_;
+    std::set<const clang::VarDecl*> deleted_;
+};
+
+void DoubleFreeViaAliasRule::check(clang::ASTContext& context,
+                                   DiagnosticEngine& diagnostics) {
+    DoubleFreeVisitor v(context, diagnostics, this);
+    v.TraverseDecl(context.getTranslationUnitDecl());
 }
 
 } // namespace tcc

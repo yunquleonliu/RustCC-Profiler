@@ -48,6 +48,7 @@ void RuleEngine::initializeDefaultRules() {
         addRule(std::make_unique<UseAfterMoveRule>());
         addRule(std::make_unique<DoubleMoveRule>());
         addRule(std::make_unique<EnforceMoveSemanticsRule>());
+        addRule(std::make_unique<DoubleFreeViaAliasRule>());
     }
     if (lifetimeEnabled_) {
         // Borrow checker rules (extend lifetime category)
@@ -56,6 +57,8 @@ void RuleEngine::initializeDefaultRules() {
         addRule(std::make_unique<BorrowOutlivesOwnerRule>());
         addRule(std::make_unique<MultipleMutableBorrowRule>());
         addRule(std::make_unique<BorrowDuringModificationRule>());
+        addRule(std::make_unique<IteratorInvalidationRule>());
+        addRule(std::make_unique<CrossFunctionLifetimeRule>());
     }
     if (safetyEnabled_) {
         // Option / Result / panic-safety rules

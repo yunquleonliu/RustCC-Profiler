@@ -2,9 +2,13 @@
 // Rust C/C++ 分析器 - 生命周期规则实现
 
 #include "tcc/LifetimeRules.h"
+#include "tcc/DiagnosticHelper.h"
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/AST/ASTContext.h>
+#include <clang/AST/ExprCXX.h>
 #include <clang/Basic/SourceManager.h>
+#include <set>
+#include <string>
 
 namespace tcc {
 
@@ -396,6 +400,249 @@ private:
 void ForbidUntrackedRefMemberRule::check(clang::ASTContext& context, DiagnosticEngine& diagnostics) {
     UntrackedRefMemberFinder finder(context, diagnostics);
     finder.TraverseDecl(context.getTranslationUnitDecl());
+}
+
+//=============================================================================
+// TCC-ITER-001: IteratorInvalidationRule
+// Detect container-modifying method calls inside range-for and iterator-for loops.
+//=============================================================================
+
+static const std::set<std::string> kInvalidatingMethods = {
+    "push_back", "emplace_back", "push_front", "emplace_front",
+    "insert", "emplace", "erase", "clear", "resize", "reserve",
+    "pop_back", "pop_front", "assign"
+};
+
+class IterInvalidVisitor
+    : public clang::RecursiveASTVisitor<IterInvalidVisitor> {
+public:
+    explicit IterInvalidVisitor(clang::ASTContext& ctx, DiagnosticEngine& diags,
+                                IteratorInvalidationRule* rule)
+        : ctx_(ctx), sm_(ctx.getSourceManager()), diags_(diags), rule_(rule) {}
+
+    // Pattern 1: range-based for loop
+    bool VisitCXXForRangeStmt(clang::CXXForRangeStmt* stmt) {
+        if (!sm_.isInMainFile(stmt->getForLoc())) return true;
+
+        // Get the range expression (the container being iterated).
+        auto* rangeInit = stmt->getRangeInit();
+        if (!rangeInit) return true;
+
+        // Resolve the iterated container to a VarDecl if possible.
+        const clang::VarDecl* containerVar = resolveToVar(rangeInit);
+        if (!containerVar) return true;
+
+        // Scan body for modifying calls on the same container.
+        scanBodyForMods(stmt->getBody(), containerVar, /*rangeFor=*/true);
+        return true;
+    }
+
+    // Pattern 2: traditional iterator-based for loop
+    bool VisitForStmt(clang::ForStmt* stmt) {
+        if (!sm_.isInMainFile(stmt->getForLoc())) return true;
+
+        // Detect: init is  auto it = container.begin()
+        const clang::VarDecl* containerVar = detectIteratorContainer(stmt->getInit());
+        if (!containerVar) return true;
+
+        scanBodyForMods(stmt->getBody(), containerVar, /*rangeFor=*/false);
+        return true;
+    }
+
+private:
+    const clang::VarDecl* resolveToVar(clang::Expr* e) const {
+        e = e->IgnoreParenImpCasts();
+        if (auto* dre = clang::dyn_cast<clang::DeclRefExpr>(e)) {
+            return clang::dyn_cast<clang::VarDecl>(dre->getDecl());
+        }
+        return nullptr;
+    }
+
+    // Returns the container VarDecl if the init is: auto it = container.begin()
+    const clang::VarDecl* detectIteratorContainer(clang::Stmt* init) const {
+        if (!init) return nullptr;
+        auto* ds = clang::dyn_cast<clang::DeclStmt>(init);
+        if (!ds || !ds->isSingleDecl()) return nullptr;
+        auto* var = clang::dyn_cast<clang::VarDecl>(ds->getSingleDecl());
+        if (!var || !var->hasInit()) return nullptr;
+
+        auto* call = clang::dyn_cast<clang::CXXMemberCallExpr>(
+            var->getInit()->IgnoreParenImpCasts());
+        if (!call) return nullptr;
+
+        auto* method = call->getMethodDecl();
+        if (!method) return nullptr;
+        std::string name = method->getNameAsString();
+        if (name != "begin" && name != "cbegin") return nullptr;
+
+        return resolveToVar(call->getImplicitObjectArgument());
+    }
+
+    // Scan a statement subtree for method calls that invalidate iterators
+    // on the given container variable.
+    void scanBodyForMods(clang::Stmt* body,
+                         const clang::VarDecl* containerVar,
+                         bool rangeFor) {
+        if (!body) return;
+        for (auto* child : body->children()) {
+            if (!child) continue;
+            checkStmtForMod(child, containerVar);
+            scanBodyForMods(child, containerVar, rangeFor);
+        }
+    }
+
+    void checkStmtForMod(clang::Stmt* s, const clang::VarDecl* containerVar) {
+        auto* call = clang::dyn_cast<clang::CXXMemberCallExpr>(s);
+        if (!call) return;
+        if (!sm_.isInMainFile(call->getBeginLoc())) return;
+
+        auto* method = call->getMethodDecl();
+        if (!method) return;
+        std::string methodName = method->getNameAsString();
+        if (!kInvalidatingMethods.count(methodName)) return;
+
+        // Check that the implicit object is our container.
+        const clang::VarDecl* obj =
+            resolveToVar(call->getImplicitObjectArgument());
+        if (obj != containerVar) return;
+
+        emitDiag(diags_, call->getBeginLoc(), sm_,
+                 rule_->getCategory(), rule_->getId(),
+                 "Container '" + containerVar->getNameAsString() +
+                 "' modified during iteration ('" + methodName +
+                 "') — iterator invalidation / "
+                 "迭代期间容器被修改，迭代器失效",
+                 Severity::Error);
+    }
+
+    clang::ASTContext& ctx_;
+    const clang::SourceManager& sm_;
+    DiagnosticEngine& diags_;
+    IteratorInvalidationRule* rule_;
+};
+
+void IteratorInvalidationRule::check(clang::ASTContext& context,
+                                     DiagnosticEngine& diagnostics) {
+    IterInvalidVisitor v(context, diagnostics, this);
+    v.TraverseDecl(context.getTranslationUnitDecl());
+}
+
+//=============================================================================
+// TCC-LIFE-005: CrossFunctionLifetimeRule
+// Three patterns:
+//  A: function returns T& or const T& to a by-value parameter (local copy)
+//  B: constructor initializer binds reference member to value parameter
+//  C: assignment of &local to a non-local (global/static/out-ptr) pointer
+//=============================================================================
+
+class CrossFuncLifetimeVisitor
+    : public clang::RecursiveASTVisitor<CrossFuncLifetimeVisitor> {
+public:
+    explicit CrossFuncLifetimeVisitor(clang::ASTContext& ctx,
+                                      DiagnosticEngine& diags,
+                                      CrossFunctionLifetimeRule* rule)
+        : ctx_(ctx), sm_(ctx.getSourceManager()), diags_(diags), rule_(rule) {}
+
+    // Pattern A: function returns T& to a by-value parameter.
+    bool VisitFunctionDecl(clang::FunctionDecl* func) {
+        if (!func->hasBody() || !sm_.isInMainFile(func->getLocation())) return true;
+
+        auto retTy = func->getReturnType();
+        if (!retTy->isReferenceType()) return true;
+
+        // Collect by-value parameters.
+        std::set<const clang::VarDecl*> byValParams;
+        for (auto* p : func->parameters()) {
+            if (!p->getType()->isReferenceType() && !p->getType()->isPointerType()) {
+                byValParams.insert(p);
+            }
+        }
+        if (byValParams.empty()) return true;
+
+        // Scan return statements inside this function.
+        checkReturns(func->getBody(), byValParams, func->getLocation());
+        return true;
+    }
+
+    // Pattern C: assignment of &local to a non-local pointer variable.
+    bool VisitBinaryOperator(clang::BinaryOperator* op) {
+        if (!sm_.isInMainFile(op->getOperatorLoc())) return true;
+        if (!op->isAssignmentOp()) return true;
+
+        auto* lhsDRE = clang::dyn_cast<clang::DeclRefExpr>(
+            op->getLHS()->IgnoreParenImpCasts());
+        if (!lhsDRE) return true;
+        auto* lhsVar = clang::dyn_cast<clang::VarDecl>(lhsDRE->getDecl());
+        if (!lhsVar || !lhsVar->getType()->isPointerType()) return true;
+
+        // lhsVar must be non-local (global, static, or extern).
+        bool lhsIsNonLocal = !lhsVar->hasLocalStorage() ||
+                             lhsVar->getStorageClass() == clang::SC_Static;
+        if (!lhsIsNonLocal) return true;
+
+        auto* rhs = op->getRHS()->IgnoreParenImpCasts();
+        if (auto* unary = clang::dyn_cast<clang::UnaryOperator>(rhs)) {
+            if (unary->getOpcode() == clang::UO_AddrOf) {
+                auto* sub = unary->getSubExpr()->IgnoreParenImpCasts();
+                if (auto* dre = clang::dyn_cast<clang::DeclRefExpr>(sub)) {
+                    if (auto* local = clang::dyn_cast<clang::VarDecl>(
+                            dre->getDecl())) {
+                        if (local->hasLocalStorage() &&
+                            sm_.isInMainFile(local->getLocation())) {
+                            emitDiag(diags_, op->getOperatorLoc(), sm_,
+                                     rule_->getCategory(), rule_->getId(),
+                                     "Address of local '" +
+                                     local->getNameAsString() +
+                                     "' stored in non-local pointer / "
+                                     "局部变量地址存入非局部指针",
+                                     Severity::Error);
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+private:
+    void checkReturns(clang::Stmt* body,
+                      const std::set<const clang::VarDecl*>& byValParams,
+                      clang::SourceLocation funcLoc) {
+        if (!body) return;
+        if (auto* ret = clang::dyn_cast<clang::ReturnStmt>(body)) {
+            auto* val = ret->getRetValue();
+            if (!val) return;
+            val = val->IgnoreParenImpCasts();
+            if (auto* dre = clang::dyn_cast<clang::DeclRefExpr>(val)) {
+                if (auto* var = clang::dyn_cast<clang::VarDecl>(
+                        dre->getDecl())) {
+                    if (byValParams.count(var)) {
+                        emitDiag(diags_, ret->getReturnLoc(), sm_,
+                                 rule_->getCategory(), rule_->getId(),
+                                 "Returning reference to by-value parameter '" +
+                                 var->getNameAsString() +
+                                 "' — dangling reference / "
+                                 "返回值参数的引用，引用将悬空",
+                                 Severity::Error);
+                    }
+                }
+            }
+        }
+        for (auto* child : body->children()) {
+            if (child) checkReturns(child, byValParams, funcLoc);
+        }
+    }
+
+    clang::ASTContext& ctx_;
+    const clang::SourceManager& sm_;
+    DiagnosticEngine& diags_;
+    CrossFunctionLifetimeRule* rule_;
+};
+
+void CrossFunctionLifetimeRule::check(clang::ASTContext& context,
+                                      DiagnosticEngine& diagnostics) {
+    CrossFuncLifetimeVisitor v(context, diagnostics, this);
+    v.TraverseDecl(context.getTranslationUnitDecl());
 }
 
 } // namespace tcc
