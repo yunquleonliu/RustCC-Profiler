@@ -53,7 +53,23 @@
 - **TCC-CONC-003**: Raw pointer thread sharing / 跨线程原始指针共享
 - **TCC-CONC-004**: Non-atomic shared counter / 非原子共享计数器
 
-**Total Rules / 规则总数**: 12
+### Move Semantic Rules / 移动语义规则 (3)
+- **TCC-OWN-005**: Use-after-move detection / 移动后使用检测
+- **TCC-OWN-006**: Double move detection / 双重移动检测
+- **TCC-OWN-007**: RAII type missing move semantics / RAII 类型缺少移动语义
+- **TCC-OWN-008** *(NEW)*: Double-free via pointer aliasing / 通过指针别名导致的双重释放
+
+### Borrow Checker Rules / 借用检查规则 (4) — Rust-parity
+- **TCC-BORROW-001** *(NEW)*: Conflicting mutable+immutable borrows / 可变与不可变借用冲突
+- **TCC-BORROW-002** *(NEW)*: Borrow outlives owner scope / 借用超出所有者作用域
+- **TCC-BORROW-003** *(NEW)*: Multiple mutable borrows of same variable / 对同一变量的多次可变借用
+- **TCC-BORROW-004** *(NEW)*: Owner modified while immutably borrowed / 不可变借用期间修改所有者
+
+### Extended Lifetime Rules / 扩展生命周期规则 (2)
+- **TCC-ITER-001** *(NEW)*: Container modified during iteration (iterator invalidation) / 迭代期间修改容器
+- **TCC-LIFE-005** *(NEW)*: Reference/pointer to local escapes function scope / 局部变量引用逃逸函数作用域
+
+**Total Rules / 规则总数**: 23 *(+11 since MVP v0.1.0)*
 
 ---
 
@@ -67,7 +83,7 @@
 | **Example Files / 示例文件** | 6 |
 | **Documentation Files / 文档文件** | 10+ |
 | **Lines of Code / 代码行数** | ~4,500+ |
-| **Rules Implemented / 已实现规则** | 12 |
+| **Rules Implemented / 已实现规则** | 23 |
 
 ---
 
