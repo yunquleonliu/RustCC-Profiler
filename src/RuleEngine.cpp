@@ -43,19 +43,22 @@ void RuleEngine::initializeDefaultRules() {
 
     // Register Rust-inspired safety rules / 注册 Rust 风格安全规则
     if (ownershipEnabled_) {
-        // Move semantics rules (extend ownership category)
-        // 移动语义规则（扩展所有权类别）
+        // Move semantics + alias safety rules (extend ownership category)
+        // 移动语义 + 别名安全规则（扩展所有权类别）
         addRule(std::make_unique<UseAfterMoveRule>());
         addRule(std::make_unique<DoubleMoveRule>());
         addRule(std::make_unique<EnforceMoveSemanticsRule>());
+        addRule(std::make_unique<DoubleFreeViaAliasRule>());  // P2-B: TCC-OWN-008
     }
     if (lifetimeEnabled_) {
-        // Borrow checker rules (extend lifetime category)
-        // 借用检查器规则（扩展生命周期类别）
+        // Borrow checker + iterator + cross-function lifetime rules
+        // 借用检查器 + 迭代器 + 跨函数生命周期规则
         addRule(std::make_unique<ConflictingBorrowRule>());
         addRule(std::make_unique<BorrowOutlivesOwnerRule>());
         addRule(std::make_unique<MultipleMutableBorrowRule>());
         addRule(std::make_unique<BorrowDuringModificationRule>());
+        addRule(std::make_unique<IteratorInvalidationRule>());  // P2-C: TCC-ITER-001
+        addRule(std::make_unique<CrossFunctionLifetimeRule>()); // P2-D: TCC-LIFE-005
     }
     if (safetyEnabled_) {
         // Option / Result / panic-safety rules

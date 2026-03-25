@@ -77,5 +77,27 @@ public:
     void check(clang::ASTContext& context, DiagnosticEngine& diagnostics) override;
 };
 
+// Rule: TCC-ITER-001 - Container modification during iteration (iterator invalidation)
+// 规则：TCC-ITER-001 - 迭代期间容器被修改（迭代器失效）
+class IteratorInvalidationRule : public LifetimeRule {
+public:
+    IteratorInvalidationRule()
+        : LifetimeRule("TCC-ITER-001",
+                      "Container modified during iteration (iterator invalidation) / "
+                      "迭代期间容器被修改（迭代器失效）") {}
+    void check(clang::ASTContext& context, DiagnosticEngine& diagnostics) override;
+};
+
+// Rule: TCC-LIFE-005 - Reference/pointer to local escaping function scope
+// 规则：TCC-LIFE-005 - 对局部变量的引用或指针逃逸函数作用域
+class CrossFunctionLifetimeRule : public LifetimeRule {
+public:
+    CrossFunctionLifetimeRule()
+        : LifetimeRule("TCC-LIFE-005",
+                      "Reference or pointer to local variable escapes function / "
+                      "对局部变量的引用或指针逃逸函数作用域") {}
+    void check(clang::ASTContext& context, DiagnosticEngine& diagnostics) override;
+};
+
 } // namespace tcc
 

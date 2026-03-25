@@ -150,5 +150,146 @@ bool EnforceMoveSemanticsRule::hasProperMoveSemantics(
     return hasMoveConstructor && hasMoveAssignment;
 }
 
+//=============================================================================
+// TCC-OWN-008: DoubleFreeViaAliasRule
+// Detects: two raw pointers aliasing the same new-expression, both deleted.
+// 检测：两个原始指针指向同一个 new 表达式，都被 delete。
+//=============================================================================
+
+namespace {
+
+class AliasFreeVisitor : public clang::RecursiveASTVisitor<AliasFreeVisitor> {
+public:
+    explicit AliasFreeVisitor(DoubleFreeViaAliasRule* rule,
+                              clang::ASTContext& ctx,
+                              DiagnosticEngine& diags)
+        : rule_(rule), ctx_(ctx), diags_(diags) {}
+
+    // Track: T* p = new T  →  alloc_[p] = newExpr
+    // 追踪: T* p = new T  →  alloc_[p] = newExpr
+    bool VisitVarDecl(clang::VarDecl* var) {
+        const auto& sm = ctx_.getSourceManager();
+        if (!sm.isInMainFile(var->getLocation())) return true;
+        if (!var->getType()->isPointerType()) return true;
+        if (!var->hasInit()) return true;
+
+        const clang::Expr* init = var->getInit()->IgnoreParenImpCasts();
+        if (clang::isa<clang::CXXNewExpr>(init)) {
+            alloc_[var] = init;
+        }
+        return true;
+    }
+
+    // Track: q = p  where p is in alloc_ → q aliases p's allocation
+    // 追踪: q = p，其中 p 在 alloc_ 中 → q 是 p 的分配的别名
+    bool VisitBinaryOperator(clang::BinaryOperator* op) {
+        const auto& sm = ctx_.getSourceManager();
+        if (!sm.isInMainFile(op->getBeginLoc())) return true;
+        if (op->getOpcode() != clang::BO_Assign) return true;
+
+        const auto* lhsDR = clang::dyn_cast<clang::DeclRefExpr>(
+            op->getLHS()->IgnoreParenImpCasts());
+        const auto* rhsDR = clang::dyn_cast<clang::DeclRefExpr>(
+            op->getRHS()->IgnoreParenImpCasts());
+        if (!lhsDR || !rhsDR) return true;
+
+        const auto* lhs = clang::dyn_cast<clang::VarDecl>(lhsDR->getDecl());
+        const auto* rhs = clang::dyn_cast<clang::VarDecl>(rhsDR->getDecl());
+        if (!lhs || !rhs) return true;
+
+        if (alloc_.count(rhs)) {
+            // lhs aliases rhs's allocation
+            aliases_[lhs] = rhs;
+        }
+        return true;
+    }
+
+    // Track: delete p  →  deleted_[p] = loc
+    // 追踪: delete p  →  deleted_[p] = loc
+    bool VisitCXXDeleteExpr(clang::CXXDeleteExpr* del) {
+        const auto& sm = ctx_.getSourceManager();
+        if (!sm.isInMainFile(del->getBeginLoc())) return true;
+
+        const clang::Expr* arg = del->getArgument()->IgnoreParenImpCasts();
+        if (const auto* dr = clang::dyn_cast<clang::DeclRefExpr>(arg)) {
+            if (const auto* var =
+                    clang::dyn_cast<clang::VarDecl>(dr->getDecl())) {
+                if (deleted_.count(var)) {
+                    // Already deleted — report
+                    emitDiag(diags_, del->getBeginLoc(), sm,
+                             rule_->getCategory(), rule_->getId(),
+                             "Deleting '" + var->getNameAsString() +
+                             "' which may already be deleted (direct alias) / "
+                             "删除可能已被删除的 '" + var->getNameAsString() + "'（直接别名）",
+                             Severity::Error);
+                } else {
+                    deleted_[var] = del->getBeginLoc();
+                    // Check if any alias of this var was already deleted.
+                    // 检查此变量的任何别名是否已被删除。
+                    checkAliasDelete(var, del->getBeginLoc(), sm);
+                }
+            }
+        }
+        return true;
+    }
+
+private:
+    void checkAliasDelete(const clang::VarDecl* var,
+                          clang::SourceLocation loc,
+                          const clang::SourceManager& sm) {
+        // Direct: var is alias of another → check if that other was deleted.
+        // 直接：var 是另一个变量的别名 → 检查该变量是否已被删除。
+        auto ait = aliases_.find(var);
+        if (ait != aliases_.end()) {
+            const clang::VarDecl* orig = ait->second;
+            if (deleted_.count(orig)) {
+                emitDiag(diags_, loc, sm,
+                         rule_->getCategory(), rule_->getId(),
+                         "Potential double-free: '" + var->getNameAsString() +
+                         "' aliases '" + orig->getNameAsString() +
+                         "' which was already deleted / "
+                         "潜在双重释放：'" + var->getNameAsString() +
+                         "' 是已被删除的 '" + orig->getNameAsString() +
+                         "' 的别名",
+                         Severity::Error);
+            }
+        }
+        // Reverse: another var was aliased from var → check if that other was deleted.
+        // 反向：另一个变量是 var 的别名 → 检查该变量是否已被删除。
+        for (const auto& [alias, orig] : aliases_) {
+            if (orig == var && deleted_.count(alias)) {
+                emitDiag(diags_, loc, sm,
+                         rule_->getCategory(), rule_->getId(),
+                         "Potential double-free: '" + var->getNameAsString() +
+                         "' is aliased by '" + alias->getNameAsString() +
+                         "' which was already deleted / "
+                         "潜在双重释放：'" + var->getNameAsString() +
+                         "' 被已删除的 '" + alias->getNameAsString() +
+                         "' 引用",
+                         Severity::Error);
+            }
+        }
+    }
+
+    DoubleFreeViaAliasRule* rule_;
+    clang::ASTContext& ctx_;
+    DiagnosticEngine& diags_;
+
+    // owner ptr → new expression
+    std::map<const clang::VarDecl*, const clang::Expr*> alloc_;
+    // alias ptr → original owner ptr
+    std::map<const clang::VarDecl*, const clang::VarDecl*> aliases_;
+    // ptr → first delete location
+    std::map<const clang::VarDecl*, clang::SourceLocation> deleted_;
+};
+
+} // anonymous namespace
+
+void DoubleFreeViaAliasRule::check(clang::ASTContext& context,
+                                   DiagnosticEngine& diagnostics) {
+    AliasFreeVisitor visitor(this, context, diagnostics);
+    visitor.TraverseDecl(context.getTranslationUnitDecl());
+}
+
 } // namespace tcc
 

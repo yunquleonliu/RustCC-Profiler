@@ -57,5 +57,17 @@ public:
     bool hasProperMoveSemantics(const clang::CXXRecordDecl* record) const;
 };
 
+// Rule: TCC-OWN-008 - Double free via pointer aliasing
+// 规则：TCC-OWN-008 - 通过指针别名导致的潜在双重释放
+class DoubleFreeViaAliasRule : public OwnershipRule {
+public:
+    DoubleFreeViaAliasRule()
+        : OwnershipRule("TCC-OWN-008",
+                       "Potential double-free via pointer aliasing / "
+                       "通过指针别名导致的潜在双重释放") {}
+
+    void check(clang::ASTContext& context, DiagnosticEngine& diagnostics) override;
+};
+
 } // namespace tcc
 
