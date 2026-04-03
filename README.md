@@ -179,9 +179,7 @@ scripts/rcc-check-changed.sh --tcc-only
 
 ## License
 
-ALL RIGHTS RESERVED! Strictly exclude all big (over 10 employees) businesses for now.
-
-For individual usage or research, we use Apache 2.0.
+Apache 2.0.
 
 ---
 
